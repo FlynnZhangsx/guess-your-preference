@@ -1,0 +1,18 @@
+# Generated feature cache (large, regeneratable via extract_features.py)
+data_cache/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Temp/demo files
+demo_refs/
+
+# Training outputs (regeneratable)
+output_v7/
+preference_model.pth
+preference_model_best.pth
+preference_model_v7.pth
+
+# Model download cache (on server, use HF cache)
+models--*/
