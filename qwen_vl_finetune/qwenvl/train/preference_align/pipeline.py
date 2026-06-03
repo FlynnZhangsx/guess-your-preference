@@ -1,43 +1,48 @@
 """
-End-to-End Inference Pipeline
--------------------------------
-Personalized poster prompt generation pipeline:
+End-to-End Inference Pipeline (No Extra Modules)
+-------------------------------------------------
+Personalized poster prompt generation using ONLY trained modules:
 
     User Images (1~N)  +  Short Text Request
             │                      │
             ▼                      │
     CLIP ViT-L/14 (frozen)         │
             │                      │
-    Image_MLP (residual, trained)  │
+    Image_MLP (trained residual)   │
             │                      │
     ┌───────┴────────┐             │
-    │  L2 norm + mean │             │
-    │  → 768-dim pref │             │
+    │  L2-norm + mean│             │
+    │  → 768 pref    │             │
     └───────┬────────┘             │
+            │                      │
             ▼                      │
-    PreferenceProjector             │
+    CLIP Text Encoder              │
+    (zero-shot style matching)     │
             │                      │
-    [K virtual tokens]             │
-            │                      │
-            └──────────────────────┘
-                    │
-                    ▼
-            Qwen-VL (prompt designer)
-                    │
-                    ▼
-            English Generation Prompt
-                    │
-                    ▼
-            Qwen-Image API (image generator)
+    ┌───────┴────────┐             │
+    │ Top-K style    │             │
+    │ descriptions   │─────────────┘
+    └───────┬────────┘
+            │
+            ▼
+    Qwen3-VL (prompt designer)
+            │
+            ▼
+    English Generation Prompt
+            │
+            ▼
+    Qwen-Image API
 
-Usage (future server deployment):
-    python pipeline.py --images ./refs/ --prompt "summer music festival poster"
+All three modules have training guarantees:
+  - CLIP Image/Text Encoder: pretrained by OpenAI
+  - Image_MLP (residual): trained by V7 (Val AUC=0.8934)
+  - Style matching: zero-shot via cosine similarity in CLIP space
 """
 
 import os
 import warnings
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Dict, Tuple
 
 import numpy as np
 import torch
@@ -45,546 +50,372 @@ import torch.nn.functional as F
 from PIL import Image
 from transformers import CLIPModel, CLIPProcessor
 
-# Local imports
 from model import PreferenceAlignModel
-from qwen_bridge import PreferenceProjector, prepare_qwen_inputs_embeds
 
 warnings.filterwarnings("ignore")
 
 # ============================================================
-# Device Selection
+# Device
 # ============================================================
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"[Pipeline] Device: {DEVICE}")
 
 # ============================================================
-# Model Paths
+# Paths
 # ============================================================
 
 BASE_DIR = Path(__file__).resolve().parent
 CHECKPOINT_PATH = BASE_DIR / "preference_model_best.pth"
 CLIP_MODEL_NAME = "openai/clip-vit-large-patch14"
-
-# Qwen model placeholder (set to actual path or HF repo when deploying)
-QWEN_VL_MODEL_NAME = "Qwen/Qwen3-VL-8B-Instruct"    # 8B is practical for deployment
-# For larger capacity: "Qwen/Qwen3-VL-235B-A22B-Instruct" (MoE, ~22B active)
-QWEN_HIDDEN_SIZE = 4096           # Qwen3-VL-8B hidden_size
-NUM_VIRTUAL_TOKENS = 4
-PROJECTOR_HIDDEN = 1024
+QWEN_VL_MODEL_NAME = "Qwen/Qwen3-VL-8B-Instruct"
 
 # ============================================================
-# 1. Load Preference Encoder (CLIP + trained Image_MLP)
+# Aesthetic style descriptors (pre-encoded by CLIP text encoder)
 # ============================================================
 
-def load_preference_encoder(
-    checkpoint_path: str,
-    device: str = DEVICE,
-) -> dict:
-    """
-    Load CLIP ViT-L/14 and the trained residual Image_MLP from checkpoint.
+AESTHETIC_STYLE_DESCRIPTORS = [
+    # Composition
+    "symmetrical balanced centered composition, classical layout",
+    "asymmetrical dynamic off-center composition, modern editorial layout",
+    "minimalist negative space, clean geometric arrangement",
+    "dense rich maximalist composition, every corner filled with detail",
+    # Color palette
+    "warm golden amber tones, sunset hues, rich earthy browns",
+    "cool oceanic blues, teal, aquamarine, crisp sea foam green",
+    "pastel macaron soft candy colors, dreamy confectionery shades",
+    "high contrast black and white, stark chiaroscuro, dramatic monochrome",
+    "vibrant neon electric, fluorescent brights, cyberpunk glow",
+    "muted desaturated tones, foggy misty atmospheric grays",
+    "autumnal harvest colors, burnt orange, deep burgundy, golden wheat",
+    # Lighting / Mood
+    "bright uplifting cheerful mood, radiant warm sunlight, high-key lighting",
+    "moody subdued atmospheric shadows, low-key dramatic lighting, film noir",
+    "soft diffused natural window light, gentle morning glow, airy atmosphere",
+    "golden hour backlight, lens flare, dreamy romantic haze",
+    # Style / Texture
+    "photorealistic 8K rendering, hyper-detailed, lifelike textures",
+    "hand-drawn illustration, watercolor textures, artistic brushstrokes",
+    "vector flat design, clean graphic shapes, bold outlines",
+    "vintage film grain, analog photography, retro nostalgic patina",
+    "futuristic sci-fi, metallic surfaces, holographic iridescence",
+    "organic botanical nature motifs, flowing floral patterns, verdant greenery",
+    # Atmosphere
+    "cozy warm inviting hygge atmosphere, soft blankets, candlelight",
+    "luxurious elegant sophisticated, marble surfaces, gold accents",
+    "playful whimsical fantastical, floating elements, magical sparkles",
+    "urban street style, gritty concrete textures, neon signs at night",
+    "serene zen meditation, raked sand, bamboo, tranquil stillness",
+    "bold powerful dynamic, explosive energy, dramatic impact",
+]
 
-    Args:
-        checkpoint_path: path to preference_model_best.pth
-        device:          "cuda" or "cpu"
-    Returns:
-        dict with keys:
-            "clip_model":     CLIPModel (ViT-L/14)
-            "clip_processor": CLIPProcessor
-            "image_mlp":      ResidualProjectionMLP (trained)
-            "model":          PreferenceAlignModel (full, for reference)
-    """
+
+@torch.no_grad()
+def _encode_style_descriptors(clip_model, clip_processor, device) -> torch.Tensor:
+    """Pre-encode all style descriptors with CLIP text encoder → [N, 768]."""
+    texts = list(AESTHETIC_STYLE_DESCRIPTORS)
+    all_embs = []
+    for i in range(0, len(texts), 16):
+        batch = texts[i:i + 16]
+        inputs = clip_processor(text=batch, return_tensors="pt", padding=True,
+                                truncation=True, max_length=77).to(device)
+        emb = clip_model.get_text_features(**inputs)
+        if not isinstance(emb, torch.Tensor):
+            emb = emb.pooler_output if hasattr(emb, 'pooler_output') and emb.pooler_output is not None \
+                  else emb.last_hidden_state[:, 0, :]
+        emb = F.normalize(emb, dim=-1)
+        all_embs.append(emb.cpu())
+    return torch.cat(all_embs, dim=0)  # [N, 768]
+
+
+# ============================================================
+# 1. Load Preference Encoder
+# ============================================================
+
+def load_preference_encoder(checkpoint_path: str = str(CHECKPOINT_PATH),
+                            device: str = DEVICE) -> dict:
+    """Load CLIP ViT-L/14 + trained Image_MLP."""
     print(f"\n[Encoder] Loading CLIP ViT-L/14 from {CLIP_MODEL_NAME}...")
     clip_model = CLIPModel.from_pretrained(CLIP_MODEL_NAME).to(device)
     clip_processor = CLIPProcessor.from_pretrained(CLIP_MODEL_NAME)
     clip_model.eval()
-
-    for param in clip_model.parameters():
-        param.requires_grad = False
+    for p in clip_model.parameters():
+        p.requires_grad = False
 
     print(f"[Encoder] Loading trained Image_MLP from {checkpoint_path}...")
-    # Instantiate the full PreferenceAlignModel to match checkpoint structure
     pref_model = PreferenceAlignModel(dim=768, hidden_dim=384, dropout=0.0).to(device)
-
     ckpt = torch.load(checkpoint_path, map_location=device, weights_only=True)
     state_dict = ckpt.get("model_state_dict", ckpt)
     pref_model.load_state_dict(state_dict, strict=True)
     pref_model.eval()
+    for p in pref_model.parameters():
+        p.requires_grad = False
 
-    for param in pref_model.parameters():
-        param.requires_grad = False
+    # Pre-encode style descriptors
+    print(f"[Encoder] Pre-encoding {len(AESTHETIC_STYLE_DESCRIPTORS)} style descriptors...")
+    style_embeddings = _encode_style_descriptors(clip_model, clip_processor, device)
 
-    # Extract just the image MLP for convenience
-    image_mlp = pref_model.image_mlp
-
-    print(f"[Encoder] Loaded. Image_MLP params: {sum(p.numel() for p in image_mlp.parameters()):,}")
-    print(f"  Checkpoint epoch: {ckpt.get('epoch', 'unknown')}")
-    print(f"  Checkpoint val_acc: {ckpt.get('val_acc', 'N/A')}")
-
+    print(f"[Encoder] Ready. Image_MLP params: {sum(p.numel() for p in pref_model.image_mlp.parameters()):,}")
     return {
         "clip_model": clip_model,
         "clip_processor": clip_processor,
-        "image_mlp": image_mlp,
-        "model": pref_model,
+        "image_mlp": pref_model.image_mlp,
+        "style_embeddings": style_embeddings,      # [N, 768]
+        "style_descriptors": AESTHETIC_STYLE_DESCRIPTORS,  # list of str
     }
 
 
 # ============================================================
-# 2. Extract User Aesthetic Vector from Reference Images
+# 2. Extract User Aesthetic Vector
 # ============================================================
 
-def extract_user_aesthetic_vector(
-    image_paths: List[str],
-    encoder: dict,
-    device: str = DEVICE,
-) -> torch.Tensor:
-    """
-    Process 1~N user-uploaded reference images through CLIP + Image_MLP,
-    L2-normalize each result, then average to produce a single 768-dim
-    preference vector representing the user's implicit aesthetic style.
-
-    Multi-image fusion strategy:
-        1. For each image: CLIP encode → 768-dim L2-normed feature
-        2. Pass through trained Image_MLP (residual) → 768-dim L2-normed
-        3. Mean-pool all normalized vectors
-        4. L2-normalize the mean → final 768-dim vector
-
-    This ensures:
-        - Each image contributes equally (L2 norm = 1 before averaging)
-        - The final vector stays on the unit hypersphere
-        - Outliers are naturally suppressed by mean pooling
-
-    Args:
-        image_paths: list of paths to user-uploaded reference images
-        encoder:     dict from load_preference_encoder()
-        device:      "cuda" or "cpu"
-    Returns:
-        preference_vector: [768] L2-normalized tensor on `device`
-    """
+def extract_user_aesthetic_vector(image_paths: List[str], encoder: dict,
+                                  device: str = DEVICE) -> torch.Tensor:
+    """1~N images → CLIP + Image_MLP → L2-norm mean → [768] preference vector."""
     if not image_paths:
-        raise ValueError("At least one reference image is required.")
+        raise ValueError("At least one reference image required.")
 
     clip_model = encoder["clip_model"]
     clip_processor = encoder["clip_processor"]
     image_mlp = encoder["image_mlp"]
-
-    aesthetic_vectors = []
+    vectors = []
 
     for i, path in enumerate(image_paths):
-        print(f"  [{i+1}/{len(image_paths)}] Processing: {path}")
+        print(f"  [{i+1}/{len(image_paths)}] {Path(path).name}")
         try:
             img = Image.open(path).convert("RGB")
         except Exception as e:
-            print(f"    Warning: Failed to load {path}: {e}. Skipping.")
+            print(f"    Skip: {e}")
             continue
 
-        # CLIP encode
         inputs = clip_processor(images=img, return_tensors="pt").to(device)
         with torch.no_grad():
             clip_feat = clip_model.get_image_features(**inputs)
-
-            # Handle transformers API variance
             if not isinstance(clip_feat, torch.Tensor):
-                clip_feat = (
-                    clip_feat.pooler_output
-                    if hasattr(clip_feat, "pooler_output") and clip_feat.pooler_output is not None
-                    else clip_feat.last_hidden_state[:, 0, :]
-                )
+                clip_feat = (clip_feat.pooler_output if hasattr(clip_feat, 'pooler_output')
+                             and clip_feat.pooler_output is not None
+                             else clip_feat.last_hidden_state[:, 0, :])
+            clip_feat = F.normalize(clip_feat, dim=-1)
+            vec = image_mlp(clip_feat).squeeze(0)  # [768] L2-normed by MLP
+            vectors.append(vec)
 
-            clip_feat = F.normalize(clip_feat, dim=-1)        # L2 norm
+    if not vectors:
+        raise RuntimeError("No valid images to process.")
 
-            # Image_MLP (residual: learns a preference delta)
-            aesthetic_vec = image_mlp(clip_feat)               # [1, 768], already L2-normed
-            aesthetic_vectors.append(aesthetic_vec.squeeze(0))
+    stacked = torch.stack(vectors, dim=0)       # [N, 768]
+    mean_vec = stacked.mean(dim=0)              # [768]
+    pref_vec = F.normalize(mean_vec, dim=-1)    # back to unit sphere
 
-    if not aesthetic_vectors:
-        raise RuntimeError("No valid images could be processed.")
-
-    # Mean-pool and re-normalize
-    stacked = torch.stack(aesthetic_vectors, dim=0)            # [N, 768]
-    mean_vec = stacked.mean(dim=0)                             # [768]
-    preference_vector = F.normalize(mean_vec, dim=-1)          # L2 unit
-
-    print(f"  Fused {len(aesthetic_vectors)} images → 768-dim preference vector")
-    print(f"  Norm: {preference_vector.norm().item():.4f}")
-    return preference_vector
+    print(f"  Fused {len(vectors)} images → 768-dim preference vector (norm={pref_vec.norm().item():.4f})")
+    return pref_vec
 
 
 # ============================================================
-# 3. Full Inference Pipeline
+# 3. Zero-Shot Style Matching
+# ============================================================
+
+def match_aesthetic_style(pref_vector: torch.Tensor, encoder: dict,
+                          top_k: int = 5) -> str:
+    """
+    Match preference vector against pre-encoded style descriptors via
+    cosine similarity (zero-shot, no training needed).
+
+    Returns a natural language paragraph describing the user's style.
+    """
+    style_embs = encoder["style_embeddings"].to(pref_vector.device)    # [N, 768]
+    descriptors = encoder["style_descriptors"]
+
+    sim = (pref_vector.unsqueeze(0) @ style_embs.T).squeeze(0)        # [N]
+    top_indices = sim.argsort(descending=True)[:top_k]
+
+    matched = [descriptors[i] for i in top_indices.tolist()]
+    scores = [sim[i].item() for i in top_indices.tolist()]
+
+    print(f"\n[Style Match] Top-{top_k} aesthetic descriptors:")
+    for i, (desc, score) in enumerate(zip(matched, scores)):
+        print(f"  {i+1}. [{score:.3f}] {desc}")
+
+    # Build style description paragraph
+    style_text = (
+        f"The user's aesthetic preferences lean toward: "
+        f"{matched[0]}; with influences of {matched[1]}; "
+        f"and elements of {matched[2]}. "
+        f"Overall vibe: {matched[3]}, {matched[4]}."
+    )
+    return style_text
+
+
+# ============================================================
+# 4. Full Pipeline
 # ============================================================
 
 class PersonalizationPipeline:
-    """
-    Complete personalized poster generation pipeline.
+    """End-to-end personalized poster prompt generation."""
 
-    Usage:
-        pipeline = PersonalizationPipeline(checkpoint_path=..., device=...)
-        prompt = pipeline.generate_personalized_prompt(
-            image_paths=["ref1.jpg", "ref2.jpg"],
-            short_prompt="summer music festival poster",
-        )
-        result = pipeline.call_qwen_image_api(prompt)
-    """
-
-    def __init__(
-        self,
-        checkpoint_path: str = str(CHECKPOINT_PATH),
-        qwen_model_name: str = QWEN_VL_MODEL_NAME,
-        device: str = DEVICE,
-        num_virtual_tokens: int = NUM_VIRTUAL_TOKENS,
-        qwen_hidden_size: int = QWEN_HIDDEN_SIZE,
-    ):
+    def __init__(self, checkpoint_path: str = str(CHECKPOINT_PATH),
+                 qwen_model_name: str = QWEN_VL_MODEL_NAME,
+                 device: str = DEVICE):
         self.device = device
-        self.num_virtual_tokens = num_virtual_tokens
-        self.qwen_hidden_size = qwen_hidden_size
+        self.qwen_model_name = qwen_model_name
 
-        # --- Phase 1: Load preference encoder ---
+        # Load trained modules
         self.encoder = load_preference_encoder(checkpoint_path, device)
 
-        # --- Phase 2: Load PreferenceProjector ---
-        print(f"\n[Bridge] Initializing PreferenceProjector...")
-        self.projector = PreferenceProjector(
-            input_dim=768,
-            num_virtual_tokens=num_virtual_tokens,
-            qwen_hidden_size=qwen_hidden_size,
-            projector_hidden=PROJECTOR_HIDDEN,
-        ).to(device)
-        print(f"  Projector params: {sum(p.numel() for p in self.projector.parameters()):,}")
-
-        # --- Phase 3: Load Qwen-VL (placeholder) ---
-        print(f"\n[Qwen-VL] Would load: {qwen_model_name}")
-        print(f"  Hidden size: {qwen_hidden_size}")
+        # Load Qwen3-VL (placeholder or real)
         self.qwen_model = None
         self.qwen_tokenizer = None
-        self._load_qwen_vl_placeholder(qwen_model_name)
+        self._load_qwen_vl(qwen_model_name)
 
-    def _load_qwen_vl_placeholder(self, model_name: str):
-        """
-        Load Qwen3-VL model for personalized prompt generation.
-
-        Key design: we inject virtual tokens directly as inputs_embeds,
-        bypassing the vision encoder. No pixel_values/image tokens needed.
-
-        Set REAL_LOAD=True below to enable actual model loading.
-        """
-        # ============================================================
-        # Set to True when running on GPU server
-        # ============================================================
+    def _load_qwen_vl(self, model_name: str):
+        """Load Qwen3-VL. Set REAL_LOAD=True on GPU server."""
         REAL_LOAD = False
-
         if not REAL_LOAD:
-            print(f"  [PLACEHOLDER] Qwen3-VL model '{model_name}' not loaded.")
-            print(f"  Set REAL_LOAD=True in pipeline.py to enable real inference.")
+            print(f"\n[Qwen-VL] Placeholder: '{model_name}' not loaded.")
+            print(f"  Set REAL_LOAD=True to enable real inference.")
             return
 
-        # ============================================================
-        # Real loading — Qwen3-VL API
-        # ============================================================
         from transformers import AutoModelForImageTextToText, AutoProcessor
-
-        print(f"  Loading {model_name} on {self.device}...")
-
-        # --- Model ---
-        # dtype="auto" lets the model pick optimal dtype per layer
+        print(f"\n[Qwen-VL] Loading {model_name}...")
         self.qwen_model = AutoModelForImageTextToText.from_pretrained(
-            model_name,
-            dtype="auto",
-            device_map="auto" if self.device == "cuda" else None,
+            model_name, dtype="auto", device_map="auto",
             trust_remote_code=True,
         ).eval()
-
-        # --- Processor (tokenizer + image processor) ---
-        # We use AutoProcessor for the chat template and tokenizer.
-        # The image processor part is NOT used (virtual tokens replace images).
         self.qwen_tokenizer = AutoProcessor.from_pretrained(
-            model_name,
-            trust_remote_code=True,
+            model_name, trust_remote_code=True,
         )
-
-        # Ensure pad token is set (needed for attention mask)
         if self.qwen_tokenizer.tokenizer.pad_token is None:
             self.qwen_tokenizer.tokenizer.pad_token = \
                 self.qwen_tokenizer.tokenizer.eos_token
+        print(f"  Loaded. Hidden: {self.qwen_model.config.hidden_size}")
 
-        print(f"  Loaded. Vocab: {self.qwen_tokenizer.tokenizer.vocab_size}, "
-              f"Hidden: {self.qwen_model.config.hidden_size}")
-
-    def generate_personalized_prompt(
-        self,
-        image_paths: List[str],
-        short_prompt: str,
-        max_new_tokens: int = 256,
-    ) -> str:
+    def generate_personalized_prompt(self, image_paths: List[str],
+                                     short_prompt: str,
+                                     max_new_tokens: int = 300) -> str:
         """
-        Generate a high-quality, personalized English Image Generation prompt.
-
-        Pipeline:
-            1. Extract 768-dim preference vector from reference images
-            2. Project to K virtual tokens via PreferenceProjector
-            3. Assemble system prompt + virtual tokens + user request
-            4. Feed to Qwen-VL, generate detailed English prompt
-
-        Args:
-            image_paths:  paths to 1~N user reference images
-            short_prompt: user's brief request (e.g., "summer music festival")
-            max_new_tokens: max tokens for Qwen-VL to generate
-        Returns:
-            generated_prompt: detailed English Text-to-Image prompt
+        Full pipeline:
+          1. Images → preference vector (CLIP + trained Image_MLP)
+          2. Preference vector → top-K style text (CLIP zero-shot matching)
+          3. Style text + short prompt → Qwen3-VL → detailed English prompt
         """
         print(f"\n{'='*60}")
-        print(f"[Generate] Personalized Prompt Generation")
+        print(f"[Generate] {len(image_paths)} ref images, request: \"{short_prompt}\"")
         print(f"{'='*60}")
-        print(f"  Short request: \"{short_prompt}\"")
-        print(f"  Reference images: {len(image_paths)}")
 
-        # Step 1: Extract preference vector
-        pref_vector = extract_user_aesthetic_vector(
-            image_paths, self.encoder, self.device
-        )  # [768]
+        # Step 1: Extract preference vector from reference images
+        pref_vector = extract_user_aesthetic_vector(image_paths, self.encoder, self.device)
 
-        # Step 2: Project to virtual tokens
-        print(f"\n[Projector] 768-dim → {self.num_virtual_tokens} virtual tokens ({self.qwen_hidden_size}-dim)")
-        virtual_tokens = self.projector(pref_vector)  # [1, K, hidden_size]
+        # Step 2: Match to known style descriptors (zero-shot)
+        style_text = match_aesthetic_style(pref_vector, self.encoder, top_k=5)
 
-        # Step 3: Assemble system instructions via chat template
+        # Step 3: Build system prompt with matched style
         system_instruction = (
-            "You are an expert aesthetic designer for Text-to-Image generation. "
-            "Virtual aesthetic preference tokens from the user's reference images "
-            "have been prepended to your input. "
-            "Based on the user's request below, write ONE detailed, professional "
-            "English prompt suitable for a high-quality image generation model. "
-            "Include: composition, lighting, color palette, style, atmosphere, "
-            "artistic references. Output ONLY the English prompt."
+            "You are an expert Text-to-Image prompt engineer. "
+            "Based on analysis of the user's reference images, "
+            f"here is their aesthetic profile: {style_text} "
+            "Now write ONE detailed, professional English prompt "
+            "for an image generation model. Include specifics about "
+            "composition, lighting, color palette, style, mood, and artistic quality. "
+            "Output ONLY the English prompt, no extra text."
         )
 
         if self.qwen_model is not None and self.qwen_tokenizer is not None:
-            # Real inference with Qwen3-VL
-
-            # Step 3a: Build chat messages (text-only, no image)
-            # Virtual tokens are prepended to embeddings, not in the chat template
+            # Real Qwen3-VL inference
             messages = [
-                {
-                    "role": "system",
-                    "content": [{"type": "text", "text": system_instruction}],
-                },
-                {
-                    "role": "user",
-                    "content": [{"type": "text", "text": short_prompt}],
-                },
+                {"role": "system", "content": [{"type": "text", "text": system_instruction}]},
+                {"role": "user", "content": [{"type": "text", "text": short_prompt}]},
             ]
-
-            # Step 3b: Tokenize text via chat template
-            text_inputs = self.qwen_tokenizer.apply_chat_template(
-                messages,
-                tokenize=True,
-                add_generation_prompt=True,
-                return_dict=True,
-                return_tensors="pt",
+            inputs = self.qwen_tokenizer.apply_chat_template(
+                messages, tokenize=True, add_generation_prompt=True,
+                return_dict=True, return_tensors="pt",
             ).to(self.device)
 
-            # Step 3c: Get text embeddings
-            embed_layer = self.qwen_model.get_input_embeddings()
-            text_embeds = embed_layer(text_inputs["input_ids"])      # [1, L, hidden]
-            text_mask = text_inputs["attention_mask"]                # [1, L]
-
-            # Step 3d: Prepend virtual tokens
-            inputs_embeds = torch.cat([virtual_tokens, text_embeds], dim=1)  # [1, K+L, H]
-            attn_mask = torch.cat([
-                torch.ones(1, virtual_tokens.size(1), dtype=torch.long, device=self.device),
-                text_mask,
-            ], dim=1)  # [1, K+L]
-
-            # Step 3e: Generate
             with torch.no_grad():
-                outputs = self.qwen_model.generate(
-                    inputs_embeds=inputs_embeds,
-                    attention_mask=attn_mask,
-                    max_new_tokens=max_new_tokens,
-                    do_sample=True,
-                    temperature=0.7,
-                    top_p=0.9,
+                generated_ids = self.qwen_model.generate(
+                    **inputs, max_new_tokens=max_new_tokens,
+                    do_sample=True, temperature=0.7, top_p=0.9,
                 )
-
-            # Decode (skip the input portion, only keep generated tokens)
-            input_len = inputs_embeds.size(1)
-            generated_ids = outputs[0][input_len:]
+            input_len = inputs["input_ids"].size(1)
             generated_prompt = self.qwen_tokenizer.decode(
-                generated_ids, skip_special_tokens=True
+                generated_ids[0][input_len:], skip_special_tokens=True
             ).strip()
         else:
-            # Placeholder: simulate what Qwen-VL would generate
-            generated_prompt = self._simulate_generation(
-                short_prompt, pref_vector
-            )
+            generated_prompt = self._simulate(short_prompt, style_text)
 
-        print(f"\n[Output] Generated Prompt:")
-        print(f"  {generated_prompt[:300]}...")
-
+        print(f"\n[Output] {generated_prompt[:200]}...")
         return generated_prompt
 
-    def _simulate_generation(
-        self,
-        short_prompt: str,
-        pref_vector: torch.Tensor,
-    ) -> str:
-        """
-        Simulate Qwen-VL output for offline testing.
-        In production, this is replaced by real model.generate().
-        """
-        # Build a plausible mock prompt demonstrating what the system would produce
-        mock_prompt = (
-            f"A visually stunning poster design for {short_prompt}, "
-            f"featuring a balanced composition with harmonious color grading, "
-            f"soft volumetric lighting with subtle rim lights, "
-            f"8K ultra-high resolution, photorealistic rendering, "
-            f"professional graphic design layout with elegant typography spacing, "
-            f"cinematic depth of field, premium print quality, "
-            f"vibrant yet sophisticated color palette tailored to the user's aesthetic profile, "
-            f"clean vector-style decorative elements, masterpiece-level artistry."
+    def _simulate(self, short_prompt: str, style_text: str) -> str:
+        """Mock generation for offline testing."""
+        return (
+            f"A stunning poster design for {short_prompt}, "
+            f"incorporating {style_text[:150]}. "
+            f"Masterful composition with intentional negative space, "
+            f"cinematic lighting with soft volumetric shadows, "
+            f"professionally color-graded palette, 8K photorealistic detail, "
+            f"elegant typography layout, premium print quality."
         )
-        return mock_prompt
 
-    def call_qwen_image_api(
-        self,
-        generated_prompt: str,
-        output_dir: str = "./generated_posters",
-        negative_prompt: str = "",
-        width: int = 1024,
-        height: int = 1024,
-    ) -> dict:
-        """
-        Call Qwen-Image API to generate the actual poster image.
-
-        This is an API placeholder. In production, replace with:
-            - DashScope API (qwen-image-plus / qwen-image-max)
-            - Or any compatible Text-to-Image API
-
-        Args:
-            generated_prompt: English prompt from generate_personalized_prompt()
-            output_dir:       directory to save generated images
-            negative_prompt:  optional negative prompt
-            width, height:    output image dimensions
-        Returns:
-            dict with keys: "success", "image_path", "prompt_used"
-        """
+    def call_qwen_image_api(self, generated_prompt: str,
+                            output_dir: str = "./generated_posters",
+                            negative_prompt: str = "",
+                            width: int = 1024, height: int = 1024) -> dict:
+        """Call Qwen-Image API (placeholder)."""
         print(f"\n{'='*60}")
-        print(f"[Qwen-Image API] Generating poster...")
-        print(f"{'='*60}")
+        print(f"[Qwen-Image API]")
         print(f"  Prompt: {generated_prompt[:200]}...")
-        print(f"  Negative: {negative_prompt or '(none)'}")
         print(f"  Size: {width}x{height}")
-
         os.makedirs(output_dir, exist_ok=True)
-
-        # ================================================================
-        # PLACEHOLDER: Replace with actual API call in production
-        # ================================================================
-        # Example using DashScope (uncomment and install dashscope):
-        #
-        # import dashscope
-        # from dashscope import ImageSynthesis
-        #
-        # response = ImageSynthesis.call(
-        #     model="qwen-image-max",
-        #     prompt=generated_prompt,
-        #     negative_prompt=negative_prompt,
-        #     n=1,
-        #     size=f"{width}*{height}",
-        # )
-        #
-        # if response.status_code == 200:
-        #     # Download and save the image from response.output.results[0].url
-        #     ...
-
-        # For now, simulate success
-        output_path = os.path.join(
-            output_dir,
-            f"poster_{abs(hash(generated_prompt)) % 100000:05d}.png",
-        )
-        print(f"  [SIMULATED] Image would be saved to: {output_path}")
-        print(f"  [SIMULATED] API call successful! (placeholder)")
+        output_path = os.path.join(output_dir,
+                                   f"poster_{abs(hash(generated_prompt)) % 100000:05d}.png")
+        print(f"  [PLACEHOLDER] Would save to: {output_path}")
+        print(f"  To enable: use DashScope qwen-image-max API")
         print(f"{'='*60}")
-
-        return {
-            "success": True,
-            "image_path": output_path,
-            "prompt_used": generated_prompt,
-            "status": "simulated",
-        }
+        return {"success": True, "image_path": output_path,
+                "prompt_used": generated_prompt, "status": "simulated"}
 
 
 # ============================================================
-# 4. Test / Demo
+# 5. Demo
 # ============================================================
 
 def run_demo():
-    """
-    End-to-end demo with mock data.
-    Creates dummy reference images and runs the full pipeline.
-    """
     print("=" * 60)
     print("Personalization Pipeline — DEMO")
     print("=" * 60)
 
-    # Create mock reference images
-    demo_dir = Path(BASE_DIR) / "demo_refs"
-    demo_dir.mkdir(exist_ok=True)
-
-    mock_images = []
-    for i in range(3):
-        img_path = demo_dir / f"ref_{i+1}.png"
-        if not img_path.exists():
-            # Create a simple colored placeholder image
-            color = [(255, 100, 100), (100, 255, 100), (100, 100, 255)][i]
-            img = Image.new("RGB", (224, 224), color=color)
-            img.save(img_path)
-        mock_images.append(str(img_path))
-
-    # Check if checkpoint exists
     if not CHECKPOINT_PATH.exists():
-        print(f"\n[WARNING] Checkpoint not found: {CHECKPOINT_PATH}")
-        print("  Running in MOCK mode without real encoder.")
-        print("  Train the model first, or place preference_model_best.pth in the directory.")
-        print("  Demo will skip encoder-dependent steps.\n")
+        print(f"\n[WARN] Checkpoint not found: {CHECKPOINT_PATH}")
+        print("  Place preference_model_best.pth in the directory first.")
         return
 
-    # Initialize pipeline
-    pipeline = PersonalizationPipeline(
-        checkpoint_path=str(CHECKPOINT_PATH),
-        device=DEVICE,
-    )
+    pipeline = PersonalizationPipeline(device=DEVICE)
 
-    # Generate personalized prompt
-    generated_prompt = pipeline.generate_personalized_prompt(
+    # Create mock reference images
+    demo_dir = BASE_DIR / "demo_refs"
+    demo_dir.mkdir(exist_ok=True)
+    mock_images = []
+    for i, color in enumerate([(255, 100, 100), (100, 255, 100), (100, 100, 255)]):
+        p = demo_dir / f"ref_{i+1}.png"
+        if not p.exists():
+            Image.new("RGB", (224, 224), color=color).save(p)
+        mock_images.append(str(p))
+
+    prompt = pipeline.generate_personalized_prompt(
         image_paths=mock_images,
-        short_prompt="a cozy autumn cafe poster with warm lighting",
+        short_prompt="a summer music festival poster at sunset on the beach",
     )
+    pipeline.call_qwen_image_api(prompt, output_dir=str(demo_dir / "output"))
 
-    # Simulate image generation
-    result = pipeline.call_qwen_image_api(
-        generated_prompt=generated_prompt,
-        output_dir=str(demo_dir / "output"),
-    )
+    # Cleanup
+    for p in mock_images:
+        try: os.remove(p)
+        except: pass
+    try: demo_dir.rmdir()
+    except: pass
 
     print(f"\n{'='*60}")
-    print("Demo complete! Pipeline summary:")
-    print(f"  Input images:   {len(mock_images)}")
-    print(f"  Short prompt:   \"a cozy autumn cafe poster with warm lighting\"")
-    print(f"  Generated:      {generated_prompt[:150]}...")
-    print(f"  API result:     {result['status']}")
+    print("Demo complete! No extra modules needed.")
     print(f"{'='*60}")
-
-    # Cleanup mock images
-    for p in mock_images:
-        try:
-            os.remove(p)
-        except:
-            pass
-    try:
-        demo_dir.rmdir()
-    except:
-        pass
 
 
 if __name__ == "__main__":
