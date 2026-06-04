@@ -358,20 +358,84 @@ class PersonalizationPipeline:
     def call_qwen_image_api(self, generated_prompt: str,
                             output_dir: str = "./generated_posters",
                             negative_prompt: str = "",
-                            width: int = 1024, height: int = 1024) -> dict:
-        """Call Qwen-Image API (placeholder)."""
+                            width: int = 1024, height: int = 1024,
+                            api_key: str = None,
+                            model: str = "qwen-image-max") -> dict:
+        """
+        Call Qwen-Image API via DashScope.
+
+        Prerequisites:
+            pip install dashscope
+
+        API Key:
+            Set environment variable: export DASHSCOPE_API_KEY="your-key"
+            Or pass api_key="your-key" directly.
+            Get key from: https://dashscope.console.aliyun.com/apiKey
+
+        Args:
+            generated_prompt: English T2I prompt from Qwen-VL
+            output_dir:       where to save the generated image
+            negative_prompt:  optional things to avoid
+            width, height:    output resolution
+            api_key:          DashScope API key (or set env var)
+            model:            "qwen-image-max" or "qwen-image-plus"
+        Returns:
+            dict with keys: success, image_path, prompt_used, status
+        """
         print(f"\n{'='*60}")
-        print(f"[Qwen-Image API]")
+        print(f"[Qwen-Image API] Model: {model}")
         print(f"  Prompt: {generated_prompt[:200]}...")
         print(f"  Size: {width}x{height}")
-        os.makedirs(output_dir, exist_ok=True)
-        output_path = os.path.join(output_dir,
-                                   f"poster_{abs(hash(generated_prompt)) % 100000:05d}.png")
-        print(f"  [PLACEHOLDER] Would save to: {output_path}")
-        print(f"  To enable: use DashScope qwen-image-max API")
         print(f"{'='*60}")
-        return {"success": True, "image_path": output_path,
-                "prompt_used": generated_prompt, "status": "simulated"}
+
+        os.makedirs(output_dir, exist_ok=True)
+
+        api_key = api_key or os.environ.get("DASHSCOPE_API_KEY", "")
+        if not api_key:
+            print(f"  [SKIP] No DASHSCOPE_API_KEY set.")
+            print(f"  Set it via: export DASHSCOPE_API_KEY='sk-xxx'")
+            print(f"  Or get a key at: https://dashscope.console.aliyun.com/apiKey")
+            return {"success": False, "error": "No API key",
+                    "prompt_used": generated_prompt, "status": "no_key"}
+
+        try:
+            import dashscope
+            from dashscope import ImageSynthesis
+            from http import HTTPStatus
+        except ImportError:
+            print(f"  [ERROR] dashscope not installed. Run: pip install dashscope")
+            return {"success": False, "error": "dashscope not installed",
+                    "prompt_used": generated_prompt, "status": "no_sdk"}
+
+        print(f"  Calling DashScope ImageSynthesis...")
+        response = ImageSynthesis.call(
+            model=model,
+            api_key=api_key,
+            prompt=generated_prompt,
+            negative_prompt=negative_prompt,
+            n=1,
+            size=f"{width}*{height}",
+        )
+
+        if response.status_code == HTTPStatus.OK:
+            result_url = response.output.results[0].url
+            print(f"  Success! Image URL: {result_url}")
+
+            # Download to local
+            import urllib.request
+            output_path = os.path.join(output_dir, f"poster_{abs(hash(generated_prompt)) % 100000:05d}.png")
+            urllib.request.urlretrieve(result_url, output_path)
+            print(f"  Saved to: {output_path}")
+            print(f"{'='*60}")
+            return {"success": True, "image_path": output_path,
+                    "image_url": result_url,
+                    "prompt_used": generated_prompt, "status": "generated"}
+        else:
+            print(f"  [FAILED] Code={response.status_code}, Message={response.message}")
+            print(f"{'='*60}")
+            return {"success": False,
+                    "error": f"Code={response.status_code}, {response.message}",
+                    "prompt_used": generated_prompt, "status": "failed"}
 
 
 # ============================================================
