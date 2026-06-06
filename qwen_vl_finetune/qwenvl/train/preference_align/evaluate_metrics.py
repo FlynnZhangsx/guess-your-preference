@@ -194,9 +194,11 @@ class CLIPEvaluator:
             ti_score = self.text_image_clip_score(short_prompt, img_path)
             ii_score = self.image_image_clip_score(ref_image_paths, img_path)
 
+            ti_str = f"{ti_score:.4f}" if ti_score is not None else "N/A"
+            ii_str = f"{ii_score:.4f}" if ii_score is not None else "N/A"
             print(f"  [{case_id}/{mode_name}] "
-                  f"Text↔Image={ti_score:.4f}  "
-                  f"Image↔Image={ii_score:.4f if ii_score is not None else 'N/A'}")
+                  f"Text↔Image={ti_str}  "
+                  f"Image↔Image={ii_str}")
 
             results["scores"][mode_name] = {
                 "text_image_score": round(ti_score, 4) if ti_score is not None else None,

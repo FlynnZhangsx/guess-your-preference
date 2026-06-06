@@ -67,15 +67,18 @@ class TestCase:
 # ---- Define your test cases here ----
 TEST_CASES: List[TestCase] = [
     TestCase(
-        id="cat_moonlight",
-        short_prompt="一只小猫坐在月光下的窗台上",
-        ref_images=[],   # ← fill with actual reference image paths
+        id="fat_cat_cooking",
+        short_prompt="一只胖胖的大橘猫在做饭",
+        ref_images=[
+            "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/output/poster_99901.png"
+        ],
         hard_style=(
-            "Style: soft dreamy atmosphere, cool silver-blue moonlight tones, "
-            "shallow depth of field with gentle bokeh, realistic fur texture, "
-            "cozy warm interior contrast with cool night outside, cinematic composition."
+            "Style: warm cozy kitchen atmosphere, soft golden lighting from overhead lamp, "
+            "rich earthy tones with touches of vibrant orange fur, shallow depth of field "
+            "focusing on the cat and cooking utensils, photorealistic textures of food and fur, "
+            "whimsical yet believable scene, cinematic composition with warm color palette."
         ),
-        description="Cat on a moonlit windowsill",
+        description="A fat orange tabby cat cooking in the kitchen",
     ),
     TestCase(
         id="summer_poster",
@@ -157,15 +160,23 @@ def _unload_all(*models):
 def _generate_image_api(prompt: str, output_path: str,
                         size: str = "2048*2048",
                         negative_prompt: str = "") -> dict:
-    """Call Qwen-Image API via DashScope."""
+    """Call Qwen-Image API, save result to the exact output_path."""
+    import shutil
     pipe = PersonalizationPipeline(load_qwen_vl=False)
-    return pipe.call_qwen_image_api(
+    result = pipe.call_qwen_image_api(
         generated_prompt=prompt,
         output_dir=str(Path(output_path).parent),
         size=size,
         negative_prompt=negative_prompt,
         prompt_extend=False,
     )
+    # call_qwen_image_api auto-names files; rename to the requested path
+    if result.get("success") and result.get("image_path"):
+        api_path = result["image_path"]
+        if os.path.exists(api_path) and api_path != output_path:
+            shutil.move(api_path, output_path)
+            result["image_path"] = output_path
+    return result
 
 
 def _run_qwen_vl_inference(model, processor, system_instruction: str,

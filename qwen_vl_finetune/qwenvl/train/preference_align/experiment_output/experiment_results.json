@@ -1,0 +1,53 @@
+{
+  "fat_cat_cooking": {
+    "id": "fat_cat_cooking",
+    "short_prompt": "一只胖胖的大橘猫在做饭",
+    "ref_images": [
+      "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/output/poster_99901.png"
+    ],
+    "hard_style": "Style: warm cozy kitchen atmosphere, soft golden lighting from overhead lamp, rich earthy tones with touches of vibrant orange fur, shallow depth of field focusing on the cat and cooking utensils, photorealistic textures of food and fur, whimsical yet believable scene, cinematic composition with warm color palette.",
+    "description": "A fat orange tabby cat cooking in the kitchen",
+    "mode_A": {
+      "mode": "A (Zero-shot Baseline)",
+      "enriched_prompt": "A chubby orange tabby cat, with soft fluffy fur and a round, adorable face, is enthusiastically cooking in a cozy, warmly lit kitchen. The cat wears a tiny chef’s hat and apron, standing on a wooden countertop while stirring a pot with a wooden spoon. Steam rises from the pot, and colorful ingredients like carrots, tomatoes, and herbs are scattered around. The scene is bathed in golden afternoon sunlight streaming through a window, with soft shadows and a warm, inviting atmosphere. The style is whimsical and charming, rendered in high-definition 4K with realistic textures, gentle lighting, and a painterly finish that feels like a cozy animated film. The cat looks joyful and focused, embodying the cuteness of a domestic hero in the kitchen.",
+      "prompt_words": 123,
+      "output_path": "experiment_output/fat_cat_cooking/fat_cat_cooking_A.png",
+      "generation": {
+        "success": true,
+        "image_path": "experiment_output/fat_cat_cooking/fat_cat_cooking_A.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/1f/20260606/51613171/df8dc5fd-aa3d-4596-97c6-c5d6e56435d2.png?Expires=1781320670&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=ZhJkYuNuWRuZKmtRsYqWzgPZUE0%3D",
+        "prompt_used": "A chubby orange tabby cat, with soft fluffy fur and a round, adorable face, is enthusiastically cooking in a cozy, warmly lit kitchen. The cat wears a tiny chef’s hat and apron, standing on a wooden countertop while stirring a pot with a wooden spoon. Steam rises from the pot, and colorful ingredients like carrots, tomatoes, and herbs are scattered around. The scene is bathed in golden afternoon sunlight streaming through a window, with soft shadows and a warm, inviting atmosphere. The style is whimsical and charming, rendered in high-definition 4K with realistic textures, gentle lighting, and a painterly finish that feels like a cozy animated film. The cat looks joyful and focused, embodying the cuteness of a domestic hero in the kitchen.",
+        "status": "generated"
+      }
+    },
+    "mode_B": {
+      "mode": "B (Hard Prompting)",
+      "enriched_prompt": "A chubby, fluffy orange tabby cat is cozily cooking in a warm, rustic kitchen, its paws gently stirring a pot on the stove with a wooden spoon, surrounded by steaming vegetables and a basket of fresh herbs; golden overhead lighting casts soft, warm glows across the scene, highlighting the cat’s rich, vibrant orange fur and the glossy textures of food and ceramic cookware; shallow depth of field keeps the cat and nearby utensils sharply in focus while softly blurring the background shelves and wooden cabinets; photorealistic details capture the softness of the cat’s fur, the steam rising from the pot, and the subtle reflections on the glassware; whimsical yet believable composition with a cinematic feel, evoking a comforting, homey mood; rich earthy tones of wood, stone, and copper contrast with the cat’s bright orange, creating a visually inviting and emotionally warm atmosphere.",
+      "prompt_words": 142,
+      "hard_style_used": "Style: warm cozy kitchen atmosphere, soft golden lighting from overhead lamp, rich earthy tones with touches of vibrant orange fur, shallow depth of field focusing on the cat and cooking utensils, photorealistic textures of food and fur, whimsical yet believable scene, cinematic composition with warm color palette.",
+      "output_path": "experiment_output/fat_cat_cooking/fat_cat_cooking_B.png",
+      "generation": {
+        "success": true,
+        "image_path": "experiment_output/fat_cat_cooking/fat_cat_cooking_B.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/58/20260606/51613171/755371d2-0ead-437e-9fec-c1e37db62022.png?Expires=1781320741&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=g7XDvb06IuRYrLL771VhMAcXnq4%3D",
+        "prompt_used": "A chubby, fluffy orange tabby cat is cozily cooking in a warm, rustic kitchen, its paws gently stirring a pot on the stove with a wooden spoon, surrounded by steaming vegetables and a basket of fresh herbs; golden overhead lighting casts soft, warm glows across the scene, highlighting the cat’s rich, vibrant orange fur and the glossy textures of food and ceramic cookware; shallow depth of field keeps the cat and nearby utensils sharply in focus while softly blurring the background shelves and wooden cabinets; photorealistic details capture the softness of the cat’s fur, the steam rising from the pot, and the subtle reflections on the glassware; whimsical yet believable composition with a cinematic feel, evoking a comforting, homey mood; rich earthy tones of wood, stone, and copper contrast with the cat’s bright orange, creating a visually inviting and emotionally warm atmosphere.",
+        "status": "generated"
+      }
+    },
+    "mode_C": {
+      "mode": "C (Ours: Preference Alignment)",
+      "enriched_prompt": "A chubby orange tabby cat, with soft fluffy fur and round, gentle eyes, is happily cooking in a cozy, warmly lit kitchen — centered in a symmetrical, classical composition. The cat wears a tiny chef’s hat and apron, standing on a wooden counter surrounded by floating magical sparkles and whimsical floating ingredients like glowing carrots and floating eggs. Steam rises gently from a pot, illuminated by candlelight casting soft, moody, low-key dramatic shadows — reminiscent of film noir with a cozy hygge twist. The kitchen is detailed with photorealistic 8K textures: soft blankets draped over chairs, rustic wooden cabinets, and a vintage toaster with a warm amber glow. The color palette is warm and inviting — deep amber, soft cream, muted browns, and golden highlights — with subtle atmospheric haze and floating fairy dust particles. The mood is playful, whimsical, and fantastical, yet grounded in hyper-realistic detail. The cat looks up with a content, slightly mischievous smile, as if it’s the star of a magical culinary show.",
+      "prompt_words": 167,
+      "style_text": "The user's aesthetic preferences lean toward: playful whimsical fantastical, floating elements, magical sparkles; with influences of photorealistic 8K rendering, hyper-detailed, lifelike textures; and elements of moody subdued atmospheric shadows, low-key dramatic lighting, film noir. Overall vibe: symmetrical balanced centered composition, classical layout, cozy warm inviting hygge atmosphere, soft blankets, candlelight.",
+      "num_ref_images": 1,
+      "output_path": "experiment_output/fat_cat_cooking/fat_cat_cooking_C.png",
+      "generation": {
+        "success": true,
+        "image_path": "experiment_output/fat_cat_cooking/fat_cat_cooking_C.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/22/20260606/51613171/3a990074-3060-491e-b1b4-18e7be53e174.png?Expires=1781320810&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=BS4A2JxDhZi5vNJLag8mpRqVEbY%3D",
+        "prompt_used": "A chubby orange tabby cat, with soft fluffy fur and round, gentle eyes, is happily cooking in a cozy, warmly lit kitchen — centered in a symmetrical, classical composition. The cat wears a tiny chef’s hat and apron, standing on a wooden counter surrounded by floating magical sparkles and whimsical floating ingredients like glowing carrots and floating eggs. Steam rises gently from a pot, illuminated by candlelight casting soft, moody, low-key dramatic shadows — reminiscent of film noir with a cozy hygge twist. The kitchen is detailed with photorealistic 8K textures: soft blankets draped over chairs, rustic wooden cabinets, and a vintage toaster with a warm amber glow. The color palette is warm and inviting — deep amber, soft cream, muted browns, and golden highlights — with subtle atmospheric haze and floating fairy dust particles. The mood is playful, whimsical, and fantastical, yet grounded in hyper-realistic detail. The cat looks up with a content, slightly mischievous smile, as if it’s the star of a magical culinary show.",
+        "status": "generated"
+      }
+    }
+  }
+}

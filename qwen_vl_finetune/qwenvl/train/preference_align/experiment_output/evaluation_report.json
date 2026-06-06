@@ -1,0 +1,31 @@
+{
+  "evaluator": "openai/clip-vit-base-patch32",
+  "device": "cuda",
+  "num_cases": 1,
+  "results": [
+    {
+      "case_id": "fat_cat_cooking",
+      "short_prompt": "一只胖胖的大橘猫在做饭",
+      "ref_images": [
+        "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/output/poster_99901.png"
+      ],
+      "scores": {
+        "A": {
+          "text_image_score": 0.2776,
+          "image_image_score": 0.7073,
+          "image_path": "experiment_output/fat_cat_cooking/fat_cat_cooking_mode_A.png"
+        },
+        "B": {
+          "text_image_score": 0.2572,
+          "image_image_score": 0.6536,
+          "image_path": "experiment_output/fat_cat_cooking/fat_cat_cooking_mode_B.png"
+        },
+        "C": {
+          "text_image_score": 0.2696,
+          "image_image_score": 0.7824,
+          "image_path": "experiment_output/fat_cat_cooking/fat_cat_cooking_mode_C.png"
+        }
+      }
+    }
+  ]
+}
