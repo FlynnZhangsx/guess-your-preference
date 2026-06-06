@@ -323,8 +323,8 @@ def print_report(all_results: List[Dict]):
 
             mode_label = {
                 "A": "A: Zero-shot Baseline",
-                "B": "B: Hard Prompting (Text Style)",
-                "C": "C: Soft Prompting (Virtual Tokens)",
+                "B": "B: Hard Prompting (Hardcoded Text)",
+                "C": "C: Ours (Preference Align)",
             }.get(mode_name, f"Mode {mode_name}")
 
             print(f"    {mode_label:<40s} {ti:>12s} {ii:>14s}")
@@ -349,8 +349,8 @@ def print_report(all_results: List[Dict]):
 
         mode_label = {
             "A": "A: Zero-shot Baseline",
-            "B": "B: Hard Prompting (Text Style)",
-            "C": "C: Soft Prompting (Virtual Tokens)",
+            "B": "B: Hard Prompting (Hardcoded Text)",
+            "C": "C: Ours (Preference Align)",
         }.get(mode_name, f"Mode {mode_name}")
 
         ti_str = f"{ti_mean:.4f} ± {ti_std:.4f}"
@@ -386,7 +386,7 @@ def print_report(all_results: List[Dict]):
 
             mode_label = {
                 "B": "B: Hard Prompting vs A",
-                "C": "C: Soft Prompting vs A",
+                "C": "C: Ours (Preference Align) vs A",
             }.get(mode_name, f"Mode {mode_name} vs A")
 
             print(f"  {mode_label:<40s} {delta_ti_str:>16s} {delta_ii_str:>16s} {winner:>10s}")
@@ -394,7 +394,7 @@ def print_report(all_results: List[Dict]):
     # ---- Mode B vs C head-to-head ----
     if "B" in mode_scores and "C" in mode_scores:
         print(f"\n{'─'*80}")
-        print(f"  HEAD-TO-HEAD: Mode C (Soft) vs Mode B (Hard)")
+        print(f"  HEAD-TO-HEAD: Mode C (Ours) vs Mode B (Hardcoded)")
         print(f"{'─'*80}")
         b_ti = torch.tensor(mode_scores["B"]["ti"]).mean().item()
         c_ti = torch.tensor(mode_scores["C"]["ti"]).mean().item()
