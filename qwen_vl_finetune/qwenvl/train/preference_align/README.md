@@ -263,11 +263,140 @@ python train.py
 
 ---
 
+## 实验：三种策略对比
+
+`run_experiments.py` 自动对每个测试用例跑三种 prompt 策略并生成图片。
+
+### 三种模式
+
+| 模式 | 名称 | 原理 |
+|------|------|------|
+| **A** | Zero-shot Baseline | 短提示词直接送 Qwen-VL 扩写，无任何偏好注入 |
+| **B** | Hard Prompting (Text Style) | 从参考图提取偏好 → 匹配 Top-5 风格文字 → 拼入 system prompt |
+| **C** | Soft Prompting (Virtual Tokens) | 从参考图提取偏好 → PreferenceProjector → K 个连续虚拟 token 注入 inputs_embeds |
+
+### 架构对比
+
+```
+Mode A:  short_prompt ──→ Qwen-VL ──→ enriched ──→ Qwen-Image
+
+Mode B:  ref_images → CLIP+MLP → style text ──┐
+                                               ├──→ Qwen-VL ──→ Qwen-Image
+         short_prompt ─────────────────────────┘
+
+Mode C:  ref_images → CLIP+MLP → pref_vec → PreferenceProjector → virtual tokens
+                                                                    │
+         short_prompt ──→ text embeddings ──→ [virtual_tokens | text_embeds] → Qwen-VL → Qwen-Image
+```
+
+### 运行
+
+```bash
+# 1. 编辑 run_experiments.py 中的 TEST_CASES，填入参考图路径
+# 2. 运行全部
+python run_experiments.py
+
+# 只跑指定模式
+python run_experiments.py --mode A          # 只跑 Baseline
+python run_experiments.py --mode B,C        # 只跑 B 和 C
+
+# 只跑指定测试用例
+python run_experiments.py --cases 0         # 只跑第一个用例
+python run_experiments.py --cases 0,1       # 跑前两个
+```
+
+输出结构：
+
+```
+experiment_output/
+├── cat_moonlight/
+│   ├── cat_moonlight_mode_A.png
+│   ├── cat_moonlight_mode_B.png
+│   └── cat_moonlight_mode_C.png
+├── summer_poster/
+│   └── ...
+└── experiment_results.json        # 包含所有 enriched prompt 和结果
+```
+
+### 准备测试数据
+
+在 `run_experiments.py` 的 `TEST_CASES` 列表中定义用例：
+
+```python
+TEST_CASES = [
+    TestCase(
+        id="cat_moonlight",
+        short_prompt="一只小猫坐在月光下的窗台上",
+        ref_images=["/path/to/ref1.jpg", "/path/to/ref2.jpg"],
+        description="Cat on a moonlit windowsill",
+    ),
+    # 添加更多用例...
+]
+```
+
+---
+
+## 评估：CLIP 自动指标
+
+`evaluate_metrics.py` 用 CLIP ViT-B/32 计算客观指标。
+
+### 两项指标
+
+| 指标 | 计算方式 | 含义 |
+|------|----------|------|
+| **Text↔Image** | `cos_sim(CLIP(short_prompt), CLIP(gen_image))` | 基础语义符合度 — 图片是否捕捉了用户请求 |
+| **Image↔Image** | `cos_sim(mean(CLIP(ref_images)), CLIP(gen_image))` | 视觉偏好一致性 — 输出是否像参考图的风格 |
+
+### 运行
+
+```bash
+# 自动扫描 experiment_output/ 目录
+python evaluate_metrics.py
+
+# 指定目录和参考图
+python evaluate_metrics.py --dir ./experiment_output --ref-dir ./my_refs
+
+# 输出 JSON 报告
+python evaluate_metrics.py --output ./my_report.json
+```
+
+输出示例：
+
+```
+PER-CASE RESULTS
+  ▸ [cat_moonlight] "一只小猫坐在月光下的窗台上"
+    Mode                                     Text↔Image    Image↔Image
+    A: Zero-shot Baseline                      0.3124          N/A
+    B: Hard Prompting (Text Style)             0.3281         0.5418
+    C: Soft Prompting (Virtual Tokens)         0.3412         0.5633
+
+AGGREGATE RESULTS (mean ± std across 3 cases)
+  Mode                                     Text↔Image        Image↔Image
+  A: Zero-shot Baseline                  0.3056 ± 0.0123        N/A
+  B: Hard Prompting (Text Style)         0.3215 ± 0.0156    0.5321 ± 0.0221
+  C: Soft Prompting (Virtual Tokens)     0.3389 ± 0.0189    0.5517 ± 0.0198
+
+DELTA FROM BASELINE (Mode A = Zero-shot)
+  Mode                                      Δ Text↔Image    Winner
+  B: Hard Prompting vs A                      +0.0159       ✓ BETTER
+  C: Soft Prompting vs A                      +0.0333       ✓ BETTER
+
+HEAD-TO-HEAD: Mode C (Soft) vs Mode B (Hard)
+  Δ Text↔Image (C - B): +0.0174  — C wins ✓
+```
+
+### 人工打分
+
+Web UI (`webui.py`) 的 Evaluate Tab 提供 1-5 分人工评分界面，评分保存至 `human_ratings/ratings_YYYYMMDD.jsonl`。
+
+---
+
 ## 依赖
 
 - `torch` >= 2.0
 - `transformers` >= 4.45
 - `diffusers`（本地模式）
 - `dashscope`（API 模式）
+- `gradio`（Web UI）
 - `Pillow`
 - `accelerate`（可选，自动 device_map）
