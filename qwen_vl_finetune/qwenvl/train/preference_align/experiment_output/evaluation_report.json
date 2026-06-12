@@ -1,8 +1,80 @@
 {
   "evaluator": "openai/clip-vit-base-patch32",
   "device": "cuda",
-  "num_cases": 1,
+  "num_cases": 16,
   "results": [
+    {
+      "case_id": "autumn_maple_stream",
+      "short_prompt": "秋天的枫叶林，一条清澈的小溪蜿蜒流过",
+      "ref_images": [
+        "/home/coder/project/data/mllm/cankao.png"
+      ],
+      "scores": {
+        "A": {
+          "text_image_score": 0.2275,
+          "image_image_score": 0.6925,
+          "image_path": "experiment_output/autumn_maple_stream/autumn_maple_stream_mode_A.png"
+        },
+        "B": {
+          "text_image_score": 0.2336,
+          "image_image_score": 0.738,
+          "image_path": "experiment_output/autumn_maple_stream/autumn_maple_stream_mode_B.png"
+        },
+        "C": {
+          "text_image_score": 0.2164,
+          "image_image_score": 0.7482,
+          "image_path": "experiment_output/autumn_maple_stream/autumn_maple_stream_mode_C.png"
+        }
+      }
+    },
+    {
+      "case_id": "cat_flower_meadow",
+      "short_prompt": "一只小猫在开满野花的山坡上打盹",
+      "ref_images": [
+        "/home/coder/project/data/mllm/cankao.png"
+      ],
+      "scores": {
+        "A": {
+          "text_image_score": 0.2421,
+          "image_image_score": 0.6599,
+          "image_path": "experiment_output/cat_flower_meadow/cat_flower_meadow_mode_A.png"
+        },
+        "B": {
+          "text_image_score": 0.2396,
+          "image_image_score": 0.6896,
+          "image_path": "experiment_output/cat_flower_meadow/cat_flower_meadow_mode_B.png"
+        },
+        "C": {
+          "text_image_score": 0.2445,
+          "image_image_score": 0.7291,
+          "image_path": "experiment_output/cat_flower_meadow/cat_flower_meadow_mode_C.png"
+        }
+      }
+    },
+    {
+      "case_id": "cherry_blossom_girl",
+      "short_prompt": "樱花树下的少女，花瓣随风飘落",
+      "ref_images": [
+        "/home/coder/project/data/mllm/cankao.png"
+      ],
+      "scores": {
+        "A": {
+          "text_image_score": 0.2622,
+          "image_image_score": 0.708,
+          "image_path": "experiment_output/cherry_blossom_girl/cherry_blossom_girl_mode_A.png"
+        },
+        "B": {
+          "text_image_score": 0.2604,
+          "image_image_score": 0.8,
+          "image_path": "experiment_output/cherry_blossom_girl/cherry_blossom_girl_mode_B.png"
+        },
+        "C": {
+          "text_image_score": 0.2457,
+          "image_image_score": 0.6818,
+          "image_path": "experiment_output/cherry_blossom_girl/cherry_blossom_girl_mode_C.png"
+        }
+      }
+    },
     {
       "case_id": "fat_cat_cooking",
       "short_prompt": "一只胖胖的大橘猫在做饭",
@@ -24,6 +96,294 @@
           "text_image_score": 0.2696,
           "image_image_score": 0.7824,
           "image_path": "experiment_output/fat_cat_cooking/fat_cat_cooking_mode_C.png"
+        }
+      }
+    },
+    {
+      "case_id": "forest_treehouse",
+      "short_prompt": "森林深处的树屋，清晨阳光透过树叶洒落",
+      "ref_images": [
+        "/home/coder/project/data/mllm/cankao.png"
+      ],
+      "scores": {
+        "A": {
+          "text_image_score": 0.2035,
+          "image_image_score": 0.7478,
+          "image_path": "experiment_output/forest_treehouse/forest_treehouse_mode_A.png"
+        },
+        "B": {
+          "text_image_score": 0.2248,
+          "image_image_score": 0.8444,
+          "image_path": "experiment_output/forest_treehouse/forest_treehouse_mode_B.png"
+        },
+        "C": {
+          "text_image_score": 0.2016,
+          "image_image_score": 0.7494,
+          "image_path": "experiment_output/forest_treehouse/forest_treehouse_mode_C.png"
+        }
+      }
+    },
+    {
+      "case_id": "japanese_garden_cat",
+      "short_prompt": "猫咪在日式庭院的水池边悠闲地喝水",
+      "ref_images": [
+        "/home/coder/project/data/mllm/cankao.png"
+      ],
+      "scores": {
+        "A": {
+          "text_image_score": 0.2665,
+          "image_image_score": 0.6513,
+          "image_path": "experiment_output/japanese_garden_cat/japanese_garden_cat_mode_A.png"
+        },
+        "B": {
+          "text_image_score": 0.2779,
+          "image_image_score": 0.707,
+          "image_path": "experiment_output/japanese_garden_cat/japanese_garden_cat_mode_B.png"
+        },
+        "C": {
+          "text_image_score": 0.2978,
+          "image_image_score": 0.6949,
+          "image_path": "experiment_output/japanese_garden_cat/japanese_garden_cat_mode_C.png"
+        }
+      }
+    },
+    {
+      "case_id": "lake_boat",
+      "short_prompt": "湖面上的一叶小舟，远处青山倒映在平静的水中",
+      "ref_images": [
+        "/home/coder/project/data/mllm/cankao.png"
+      ],
+      "scores": {
+        "A": {
+          "text_image_score": 0.2086,
+          "image_image_score": 0.6258,
+          "image_path": "experiment_output/lake_boat/lake_boat_mode_A.png"
+        },
+        "B": {
+          "text_image_score": 0.2221,
+          "image_image_score": 0.7415,
+          "image_path": "experiment_output/lake_boat/lake_boat_mode_B.png"
+        },
+        "C": {
+          "text_image_score": 0.1868,
+          "image_image_score": 0.6967,
+          "image_path": "experiment_output/lake_boat/lake_boat_mode_C.png"
+        }
+      }
+    },
+    {
+      "case_id": "library_window",
+      "short_prompt": "图书馆靠窗的书桌，午后阳光斜照在翻开的书上",
+      "ref_images": [
+        "/home/coder/project/data/mllm/cankao.png"
+      ],
+      "scores": {
+        "A": {
+          "text_image_score": 0.1978,
+          "image_image_score": 0.6852,
+          "image_path": "experiment_output/library_window/library_window_mode_A.png"
+        },
+        "B": {
+          "text_image_score": 0.1864,
+          "image_image_score": 0.7468,
+          "image_path": "experiment_output/library_window/library_window_mode_B.png"
+        },
+        "C": {
+          "text_image_score": 0.203,
+          "image_image_score": 0.7342,
+          "image_path": "experiment_output/library_window/library_window_mode_C.png"
+        }
+      }
+    },
+    {
+      "case_id": "mushroom_house",
+      "short_prompt": "童话里的蘑菇小屋，被五彩缤纷的花园环绕",
+      "ref_images": [
+        "/home/coder/project/data/mllm/cankao.png"
+      ],
+      "scores": {
+        "A": {
+          "text_image_score": 0.2322,
+          "image_image_score": 0.8209,
+          "image_path": "experiment_output/mushroom_house/mushroom_house_mode_A.png"
+        },
+        "B": {
+          "text_image_score": 0.2547,
+          "image_image_score": 0.8242,
+          "image_path": "experiment_output/mushroom_house/mushroom_house_mode_B.png"
+        },
+        "C": {
+          "text_image_score": 0.2377,
+          "image_image_score": 0.8565,
+          "image_path": "experiment_output/mushroom_house/mushroom_house_mode_C.png"
+        }
+      }
+    },
+    {
+      "case_id": "rainy_old_street",
+      "short_prompt": "雨后的江南老街，青石板路倒映着灯笼微光",
+      "ref_images": [
+        "/home/coder/project/data/mllm/cankao.png"
+      ],
+      "scores": {
+        "A": {
+          "text_image_score": 0.2455,
+          "image_image_score": 0.592,
+          "image_path": "experiment_output/rainy_old_street/rainy_old_street_mode_A.png"
+        },
+        "B": {
+          "text_image_score": 0.2134,
+          "image_image_score": 0.7289,
+          "image_path": "experiment_output/rainy_old_street/rainy_old_street_mode_B.png"
+        },
+        "C": {
+          "text_image_score": 0.208,
+          "image_image_score": 0.7259,
+          "image_path": "experiment_output/rainy_old_street/rainy_old_street_mode_C.png"
+        }
+      }
+    },
+    {
+      "case_id": "seaside_dusk",
+      "short_prompt": "海边小镇的黄昏，海鸥在晚霞中飞翔",
+      "ref_images": [
+        "/home/coder/project/data/mllm/cankao.png"
+      ],
+      "scores": {
+        "A": {
+          "text_image_score": 0.1653,
+          "image_image_score": 0.5081,
+          "image_path": "experiment_output/seaside_dusk/seaside_dusk_mode_A.png"
+        },
+        "B": {
+          "text_image_score": 0.2396,
+          "image_image_score": 0.815,
+          "image_path": "experiment_output/seaside_dusk/seaside_dusk_mode_B.png"
+        },
+        "C": {
+          "text_image_score": 0.204,
+          "image_image_score": 0.6792,
+          "image_path": "experiment_output/seaside_dusk/seaside_dusk_mode_C.png"
+        }
+      }
+    },
+    {
+      "case_id": "snow_mountain_cabin",
+      "short_prompt": "雪山脚下的小木屋，炊烟袅袅升起",
+      "ref_images": [
+        "/home/coder/project/data/mllm/cankao.png"
+      ],
+      "scores": {
+        "A": {
+          "text_image_score": 0.2322,
+          "image_image_score": 0.5847,
+          "image_path": "experiment_output/snow_mountain_cabin/snow_mountain_cabin_mode_A.png"
+        },
+        "B": {
+          "text_image_score": 0.2343,
+          "image_image_score": 0.7772,
+          "image_path": "experiment_output/snow_mountain_cabin/snow_mountain_cabin_mode_B.png"
+        },
+        "C": {
+          "text_image_score": 0.2387,
+          "image_image_score": 0.7459,
+          "image_path": "experiment_output/snow_mountain_cabin/snow_mountain_cabin_mode_C.png"
+        }
+      }
+    },
+    {
+      "case_id": "starry_meadow",
+      "short_prompt": "星空下的草原，萤火虫在夜色中飞舞",
+      "ref_images": [
+        "/home/coder/project/data/mllm/cankao.png"
+      ],
+      "scores": {
+        "A": {
+          "text_image_score": 0.2606,
+          "image_image_score": 0.6358,
+          "image_path": "experiment_output/starry_meadow/starry_meadow_mode_A.png"
+        },
+        "B": {
+          "text_image_score": 0.2543,
+          "image_image_score": 0.7513,
+          "image_path": "experiment_output/starry_meadow/starry_meadow_mode_B.png"
+        },
+        "C": {
+          "text_image_score": 0.2525,
+          "image_image_score": 0.7089,
+          "image_path": "experiment_output/starry_meadow/starry_meadow_mode_C.png"
+        }
+      }
+    },
+    {
+      "case_id": "sunflower_bicycle",
+      "short_prompt": "向日葵花田中间的小路上，停着一辆老式自行车",
+      "ref_images": [
+        "/home/coder/project/data/mllm/cankao.png"
+      ],
+      "scores": {
+        "A": {
+          "text_image_score": 0.2008,
+          "image_image_score": 0.6599,
+          "image_path": "experiment_output/sunflower_bicycle/sunflower_bicycle_mode_A.png"
+        },
+        "B": {
+          "text_image_score": 0.2124,
+          "image_image_score": 0.7156,
+          "image_path": "experiment_output/sunflower_bicycle/sunflower_bicycle_mode_B.png"
+        },
+        "C": {
+          "text_image_score": 0.2128,
+          "image_image_score": 0.7186,
+          "image_path": "experiment_output/sunflower_bicycle/sunflower_bicycle_mode_C.png"
+        }
+      }
+    },
+    {
+      "case_id": "train_wheat_field",
+      "short_prompt": "一列老式火车穿行在金黄色的麦田中",
+      "ref_images": [
+        "/home/coder/project/data/mllm/cankao.png"
+      ],
+      "scores": {
+        "A": {
+          "text_image_score": 0.1751,
+          "image_image_score": 0.5717,
+          "image_path": "experiment_output/train_wheat_field/train_wheat_field_mode_A.png"
+        },
+        "B": {
+          "text_image_score": 0.1982,
+          "image_image_score": 0.6746,
+          "image_path": "experiment_output/train_wheat_field/train_wheat_field_mode_B.png"
+        },
+        "C": {
+          "text_image_score": 0.1838,
+          "image_image_score": 0.6159,
+          "image_path": "experiment_output/train_wheat_field/train_wheat_field_mode_C.png"
+        }
+      }
+    },
+    {
+      "case_id": "winter_coffee_shop",
+      "short_prompt": "冬日清晨的街角咖啡店，窗外飘着细雪",
+      "ref_images": [
+        "/home/coder/project/data/mllm/cankao.png"
+      ],
+      "scores": {
+        "A": {
+          "text_image_score": 0.2427,
+          "image_image_score": 0.5816,
+          "image_path": "experiment_output/winter_coffee_shop/winter_coffee_shop_mode_A.png"
+        },
+        "B": {
+          "text_image_score": 0.233,
+          "image_image_score": 0.725,
+          "image_path": "experiment_output/winter_coffee_shop/winter_coffee_shop_mode_B.png"
+        },
+        "C": {
+          "text_image_score": 0.2251,
+          "image_image_score": 0.7442,
+          "image_path": "experiment_output/winter_coffee_shop/winter_coffee_shop_mode_C.png"
         }
       }
     }

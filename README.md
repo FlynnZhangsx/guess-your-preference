@@ -1,4 +1,77 @@
-# Qwen3-VL
+# Duomotai — Personalized Image Generation
+
+**Cross-modal preference alignment for personalized text-to-image generation using Qwen3-VL.**
+
+> Given 0~N reference images + a short text prompt, the system automatically extracts your aesthetic preferences and generates a customized image. Supports multi-turn interactive refinement via a ChatGPT-style Web UI.
+
+🚀 **[Quick Start →](#quick-start)** &nbsp;|&nbsp; 💬 **[Web UI →](qwen_vl_finetune/qwenvl/train/preference_align/static/index.html)** &nbsp;|&nbsp; 📖 **[Preference Align README →](qwen_vl_finetune/qwenvl/train/preference_align/README.md)**
+
+---
+
+## Project Overview
+
+```
+Reference Images + "a cat on a moonlit windowsill"
+        │
+        ▼
+CLIP ViT-L/14 + Image_MLP → Preference Vector (768-dim)
+        │
+        ▼
+Top-K Style Matching → "golden hour backlight, watercolor textures..."
+        │
+        ▼
+Qwen3-VL-4B → Detailed English Prompt
+        │
+        ▼
+Qwen-Image API / Local Diffusers → 🖼️ Generated Image
+```
+
+### Key Features
+
+- **Preference Alignment**: Trained Image_MLP (Val AUC=0.8934) extracts aesthetic style from user reference images
+- **Multi-turn Refinement**: ChatGPT-style chat interface for iterative image optimization
+- **Dual Generation Modes**: DashScope API (`qwen-image-2.0-pro`) or local diffusers (`Qwen-Image-2512`)
+- **Automated Evaluation**: CLIP-based Text↔Image and Image↔Image scoring
+
+### Core Model
+
+| Component | Model | Params | Notes |
+|-----------|-------|:---:|-------|
+| Image Encoder | CLIP ViT-L/14 | 428M | Frozen |
+| Image_MLP (ours) | Residual MLP | 590K | Trained, Val AUC=0.8934 |
+| Prompt Designer | Qwen3-VL-4B-Instruct | 4B | Instruction-tuned |
+| Image Generator | Qwen-Image | — | API or local |
+
+---
+
+## Quick Start
+
+```bash
+cd qwen_vl_finetune/qwenvl/train/preference_align
+bash run.sh                                    # Auto-launch server
+# → Open http://localhost:7860
+```
+
+See [`qwen_vl_finetune/qwenvl/train/preference_align/README.md`](qwen_vl_finetune/qwenvl/train/preference_align/README.md) for full documentation.
+
+---
+
+## Repository Structure
+
+```
+duomotai/
+├── qwen_vl_finetune/         # Preference alignment system
+│   └── qwenvl/train/
+│       └── preference_align/ # Core module (training + inference + Web UI)
+├── cookbooks/                # Qwen3-VL example notebooks
+├── docker/                   # Docker deployment
+├── evaluation/               # Evaluation scripts
+└── qwen-vl-utils/            # Qwen-VL utility library
+```
+
+---
+
+# Qwen3-VL (Base Model)
 
 
 <p align="center">

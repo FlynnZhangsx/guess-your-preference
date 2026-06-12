@@ -12,6 +12,7 @@ preference_model.pth
 # Model download cache (on server, use HF cache)
 models--*/
 
-# Keep generated poster outputs
-!output/
-!output/*
+# Runtime generated outputs (ignore)
+output/poster_*.png
+uploads/
+human_ratings/

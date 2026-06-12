@@ -1,24 +1,14 @@
 """
-Personalized Prompt-to-Image Generation — Interactive Web UI
--------------------------------------------------------------
-Gradio-based UI for the full preference-alignment pipeline.
-
-Tabs:
-  1. Generate — Single image generation with full control
-  2. Compare — Side-by-side strategy comparison
-  3. Evaluate — CLIP score + human ratings on generated images
+AI Image Studio — ChatGPT-style Interactive Web UI
+--------------------------------------------------
+Multi-turn preference-aligned image generation.
 
 Usage:
     python webui.py                        # default port 7860
     python webui.py --port 8080            # custom port
-    python webui.py --share                # public link via Gradio
 """
 
-import os
-import sys
-import json
-import time
-import argparse
+import os, sys, json, time, argparse, base64, io
 from pathlib import Path
 from datetime import datetime
 from typing import List, Optional, Tuple
@@ -26,533 +16,313 @@ from typing import List, Optional, Tuple
 import gradio as gr
 from PIL import Image
 
-# Ensure we can import sibling modules
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-
 from pipeline import PersonalizationPipeline
-from eval_metrics import ImageGenerationEvaluator
 
-# ============================================================
-# Config
-# ============================================================
+# Patch gradio_client JSON schema bug
+import gradio_client.utils as gc_utils
+_o_get = gc_utils.get_type
+_o_json = gc_utils._json_schema_to_python_type
+def _p_get(s):
+    if isinstance(s, bool): return "boolean"
+    return _o_get(s)
+def _p_json(s, d=None):
+    if isinstance(s, bool): return "boolean"
+    if not isinstance(s, dict): return str(type(s).__name__)
+    return _o_json(s, d)
+gc_utils.get_type = _p_get
+gc_utils._json_schema_to_python_type = _p_json
 
 QWEN_VL_PATH = "/home/coder/project/data/mllm/models/Qwen3-VL-4B-Instruct"
 OUTPUT_DIR = Path(__file__).resolve().parent / "output"
-RATINGS_DIR = Path(__file__).resolve().parent / "human_ratings"
-RATINGS_DIR.mkdir(exist_ok=True)
+_pipeline = None
 
 # ============================================================
-# Global pipeline & evaluator (lazy init per session)
+# Helpers
 # ============================================================
 
-_pipeline: Optional[PersonalizationPipeline] = None
-_evaluator: Optional[ImageGenerationEvaluator] = None
+def _pil_to_b64(img: Image.Image) -> str:
+    buf = io.BytesIO()
+    img.save(buf, format="PNG")
+    return "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode()
 
-
-def get_evaluator() -> ImageGenerationEvaluator:
-    global _evaluator
-    if _evaluator is None:
-        _evaluator = ImageGenerationEvaluator()
-    return _evaluator
-
-
-# ============================================================
-# Tab 1: Single Generation
-# ============================================================
-
-def generate_single(
-    ref_images: List[Image.Image],
-    short_prompt: str,
-    mode: str,
-    size: str,
-    negative_prompt: str,
-    top_k: int,
-    temperature: float,
-    max_tokens: int,
-    progress=gr.Progress(),
-) -> Tuple[str, str, Image.Image, str]:
-    """
-    Run the full pipeline: ref images + short prompt → enriched prompt → image.
-    """
-    global _pipeline
-
-    if not short_prompt.strip():
-        return "", "", None, "⚠️ 请输入提示词 (Please enter a prompt)."
-
-    # --- Save reference images to temp files ---
-    image_paths = []
+def _save_uploaded(uploaded) -> List[str]:
+    """Save uploaded images (PIL from gr.Image or list) to temp dir."""
+    paths = []
     tmp_dir = OUTPUT_DIR / "tmp_uploads"
     tmp_dir.mkdir(parents=True, exist_ok=True)
-    for i, img in enumerate(ref_images):
-        if img is not None:
-            p = tmp_dir / f"ref_{int(time.time())}_{i}.png"
-            img.save(p)
-            image_paths.append(str(p))
+    if uploaded is None:
+        return paths
 
-    progress(0.1, desc="Loading Qwen3-VL...")
-
-    # --- Load pipeline ---
-    try:
-        _pipeline = PersonalizationPipeline(
-            qwen_model_name=QWEN_VL_PATH,
-            load_qwen_vl=True,
-        )
-    except Exception as e:
-        return "", "", None, f"❌ Failed to load Qwen3-VL: {e}"
-
-    progress(0.3, desc="Extracting preferences & generating prompt...")
-
-    # --- Generate enriched prompt ---
-    try:
-        enriched_prompt = _pipeline.generate_personalized_prompt(
-            image_paths=image_paths,
-            short_prompt=short_prompt,
-            max_new_tokens=max_tokens,
-        )
-    except Exception as e:
-        return "", "", None, f"❌ Prompt generation failed: {e}"
-
-    progress(0.6, desc="Unloading Qwen3-VL...")
-
-    # --- Free memory ---
-    _pipeline.unload_preference_encoder()
-    _pipeline.unload_qwen_vl()
-
-    progress(0.75, desc=f"Generating image via {mode}...")
-
-    # --- Generate image ---
-    try:
-        result = _pipeline.generate_image_unified(
-            prompt=enriched_prompt,
-            mode="api" if mode == "API (DashScope)" else "local",
-            size=size,
-            negative_prompt=negative_prompt,
-            output_dir=str(OUTPUT_DIR),
-        )
-    except Exception as e:
-        return enriched_prompt, "", None, f"❌ Image generation failed: {e}"
-
-    progress(0.95, desc="Done!")
-
-    if result.get("success"):
-        image_path = result.get("image_path", "")
+    items = uploaded if isinstance(uploaded, (list, tuple)) else [uploaded]
+    for i, item in enumerate(items):
         try:
-            gen_image = Image.open(image_path).convert("RGB")
+            if isinstance(item, Image.Image):
+                p = tmp_dir / f"ref_{int(time.time())}_{i}.png"
+                item.save(p)
+                paths.append(str(p))
+            elif isinstance(item, dict) and "image" in item:
+                img = item["image"]
+                if isinstance(img, Image.Image):
+                    p = tmp_dir / f"ref_{int(time.time())}_{i}.png"
+                    img.save(p)
+                    paths.append(str(p))
+            elif isinstance(item, str) and os.path.exists(item):
+                paths.append(item)
         except Exception:
-            gen_image = None
+            pass
+    return paths
 
-        # Compute CLIP score
-        ev = get_evaluator()
-        cs = ev.clip_score(enriched_prompt, gen_image) if gen_image else 0.0
-        aes = ev.aesthetic_score(gen_image) if gen_image else 0.0
-        pr = ev.prompt_richness(enriched_prompt)
+def _render_chat(session: dict) -> str:
+    """Render chat as clean HTML with user/AI bubbles."""
+    history = session.get("turn_history", [])
+    if not history:
+        return '<div style="text-align:center;padding:60px 20px;color:#aaa;font-size:15px">Describe what you want to create and upload reference images</div>'
 
-        status = (
-            f"✅ **生成成功** | CLIP Score: `{cs:.4f}` | Aesthetic: `{aes:.4f}`\n\n"
-            f"**Enriched Prompt** ({pr['word_count']} words, "
-            f"unique ratio={pr['unique_ratio']}, "
-            f"detail keywords={pr['detail_keywords']}):\n\n"
-            f"{enriched_prompt}\n\n"
-            f"**Image saved to:** `{image_path}`"
-        )
-        return enriched_prompt, image_path, gen_image, status
-    else:
-        return enriched_prompt, "", None, f"❌ Failed: {result.get('error', 'Unknown error')}"
+    bubbles = []
+    for t in history:
+        turn = t["turn"]
+        feedback = t.get("feedback", "")
+        prompt = t.get("prompt", "")
+        img_path = t.get("image_path", "")
+        cs = t.get("clip_score", 0)
+        aes = t.get("aesthetic_score", 0)
 
-
-# ============================================================
-# Tab 2: Compare Strategies
-# ============================================================
-
-def compare_strategies(
-    ref_images: List[Image.Image],
-    short_prompt: str,
-    size: str,
-    negative_prompt: str,
-    progress=gr.Progress(),
-) -> Tuple[Image.Image, Image.Image, str, str, str]:
-    """
-    Run 0img (neutral) vs Nimg (preference-aligned) side-by-side.
-    """
-    global _pipeline
-
-    if not short_prompt.strip():
-        return None, None, "", "", "⚠️ 请输入提示词"
-
-    # Save reference images
-    image_paths = []
-    tmp_dir = OUTPUT_DIR / "tmp_uploads"
-    tmp_dir.mkdir(parents=True, exist_ok=True)
-    for i, img in enumerate(ref_images):
-        if img is not None:
-            p = tmp_dir / f"comp_ref_{int(time.time())}_{i}.png"
-            img.save(p)
-            image_paths.append(str(p))
-
-    progress(0.1, desc="Loading Qwen3-VL...")
-    _pipeline = PersonalizationPipeline(qwen_model_name=QWEN_VL_PATH, load_qwen_vl=True)
-
-    # ---- Strategy A: Neutral centroid (no ref images) ----
-    progress(0.2, desc="Strategy A: Neutral centroid...")
-    prompt_A = _pipeline.generate_personalized_prompt(
-        image_paths=[],
-        short_prompt=short_prompt,
-    )
-    _pipeline.unload_preference_encoder()
-
-    prompt_B = prompt_A
-    if image_paths:
-        progress(0.5, desc="Strategy B: Preference-aligned...")
-        prompt_B = _pipeline.generate_personalized_prompt(
-            image_paths=image_paths,
-            short_prompt=short_prompt,
-        )
-
-    _pipeline.unload_preference_encoder()
-    _pipeline.unload_qwen_vl()
-
-    # Generate images
-    progress(0.7, desc="Generating image A (neutral)...")
-    result_A = _pipeline.generate_image_unified(
-        prompt=prompt_A, mode="api", size=size,
-        negative_prompt=negative_prompt, output_dir=str(OUTPUT_DIR),
-    )
-
-    progress(0.85, desc="Generating image B (aligned)...")
-    result_B = _pipeline.generate_image_unified(
-        prompt=prompt_B, mode="api", size=size,
-        negative_prompt=negative_prompt, output_dir=str(OUTPUT_DIR),
-    )
-
-    progress(0.95, desc="Evaluating...")
-
-    # Load images and compute scores
-    img_A = Image.open(result_A["image_path"]).convert("RGB") if result_A.get("success") else None
-    img_B = Image.open(result_B["image_path"]).convert("RGB") if result_B.get("success") else None
-
-    ev = get_evaluator()
-
-    score_A = ev.clip_score(prompt_A, img_A) if img_A else 0
-    aes_A = ev.aesthetic_score(img_A) if img_A else 0
-    score_B = ev.clip_score(prompt_B, img_B) if img_B else 0
-    aes_B = ev.aesthetic_score(img_B) if img_B else 0
-
-    status_A = f"**Strategy A: 0-Image (Neutral Centroid)**\n\nCLIP: `{score_A:.4f}` | Aesthetic: `{aes_A:.4f}`\n\n{prompt_A[:500]}"
-    status_B = f"**Strategy B: {len(image_paths)}-Image (Preference Aligned)**\n\nCLIP: `{score_B:.4f}` | Aesthetic: `{aes_B:.4f}`\n\n{prompt_B[:500]}"
-
-    # Comparison summary
-    diff_clip = score_B - score_A
-    diff_aes = aes_B - aes_A
-    winner = "B (Preference-Aligned)" if diff_clip > 0 else "A (Neutral Centroid)"
-    summary = (
-        f"### 📊 Comparison Summary\n\n"
-        f"| Metric | A: Neutral | B: Aligned | Δ |\n"
-        f"|--------|-----------|-----------|-----|\n"
-        f"| CLIP Score | {score_A:.4f} | {score_B:.4f} | {diff_clip:+.4f} |\n"
-        f"| Aesthetic | {aes_A:.4f} | {aes_B:.4f} | {diff_aes:+.4f} |\n\n"
-        f"**Winner by CLIP Score: {winner}**"
-    )
-
-    return img_A, img_B, status_A, status_B, summary
-
-
-# ============================================================
-# Tab 3: Evaluation
-# ============================================================
-
-def evaluate_image(
-    image: Image.Image,
-    prompt: str,
-    ref_image: Optional[Image.Image],
-) -> Tuple[str, str]:
-    """Compute CLIP metrics for a single image."""
-    if image is None:
-        return "⚠️ 请上传图片", ""
-    if not prompt.strip():
-        prompt = "A high-quality generated image"
-
-    ev = get_evaluator()
-    ref = ref_image if ref_image is not None else None
-    results = ev.evaluate(prompt=prompt, generated_image=image, reference_image=ref)
-
-    score_text = (
-        f"### 📊 Auto Metrics\n\n"
-        f"| Metric | Score |\n"
-        f"|--------|-------|\n"
-        f"| **CLIP Score** (prompt↔image) | `{results['clip_score']:.4f}` |\n"
-        f"| **Aesthetic Score** (quality) | `{results['aesthetic_score']:.4f}` |\n"
-    )
-    if ref is not None:
-        score_text += f"| **Style Consistency** (ref↔output) | `{results.get('style_consistency', 0):.4f}` |\n"
-
-    score_text += (
-        f"\n**Prompt Richness:** {results['prompt_richness']['word_count']} words, "
-        f"{results['prompt_richness']['unique_ratio']} unique ratio, "
-        f"{results['prompt_richness']['detail_keywords']} detail keywords."
-    )
-
-    return score_text, json.dumps(results, ensure_ascii=False, indent=2)
-
-
-def submit_rating(
-    image: Image.Image,
-    prompt: str,
-    aesthetics_rating: float,
-    alignment_rating: float,
-    notes: str,
-) -> str:
-    """Save human rating to JSON."""
-    if image is None:
-        return "⚠️ 请先生成或上传图片"
-
-    rating = {
-        "timestamp": datetime.now().isoformat(),
-        "prompt": prompt[:500] if prompt else "",
-        "aesthetics_rating": int(aesthetics_rating),
-        "alignment_rating": int(alignment_rating),
-        "notes": notes,
-    }
-
-    # Save to ratings file
-    ratings_file = RATINGS_DIR / f"ratings_{datetime.now().strftime('%Y%m%d')}.jsonl"
-    with open(ratings_file, "a", encoding="utf-8") as f:
-        f.write(json.dumps(rating, ensure_ascii=False) + "\n")
-
-    # Also save the rated image
-    img_file = RATINGS_DIR / f"rated_{datetime.now().strftime('%H%M%S')}.png"
-    image.save(img_file)
-
-    # Load aggregate stats
-    all_ratings = []
-    for rf in sorted(RATINGS_DIR.glob("ratings_*.jsonl")):
-        for line in rf.read_text().splitlines():
+        img_html = ""
+        if img_path and os.path.exists(img_path):
             try:
-                all_ratings.append(json.loads(line))
+                pil_img = Image.open(img_path).convert("RGB")
+                img_html = f'<img src="{_pil_to_b64(pil_img)}" style="max-width:100%;border-radius:12px;margin-top:8px">'
             except Exception:
                 pass
 
-    n = len(all_ratings)
-    if n > 0:
-        avg_aes = sum(r["aesthetics_rating"] for r in all_ratings) / n
-        avg_align = sum(r["alignment_rating"] for r in all_ratings) / n
-        return (
-            f"✅ **Rating submitted!** (Total: {n} ratings)\n\n"
-            f"### 📈 Aggregate Statistics\n\n"
-            f"| Metric | Average |\n"
-            f"|--------|--------|\n"
-            f"| Aesthetics (1-5) | `{avg_aes:.2f}` |\n"
-            f"| Alignment (1-5) | `{avg_align:.2f}` |\n\n"
-            f"Ratings saved to: `{ratings_file}`\n"
-            f"Rated image: `{img_file}`"
-        )
-    return f"✅ Rating submitted!"
+        prompt_preview = prompt[:300] + ("..." if len(prompt) > 300 else "")
 
+        bubbles.append(f'<div style="display:flex;justify-content:flex-end;margin:16px 0"><div style="max-width:72%;background:#f0f0f0;color:#222;padding:14px 18px;border-radius:16px 16px 4px 16px;font-size:14px;line-height:1.6"><div style="font-weight:600;font-size:12px;color:#888;margin-bottom:4px">You · Turn {turn}</div>{feedback}</div></div>')
+        bubbles.append(f'<div style="display:flex;justify-content:flex-start;margin:16px 0"><div style="max-width:85%;background:#fff;color:#222;padding:14px 18px;border-radius:16px 16px 16px 4px;font-size:14px;line-height:1.6;border:1px solid #e5e5e5">{img_html}<div style="margin-top:8px;color:#555;font-size:13px;line-height:1.5">{prompt_preview}</div><div style="display:flex;gap:20px;margin-top:8px;font-size:12px"><span style="color:#667eea">CLIP {cs:.4f}</span><span style="color:#52c41a">Aesthetic {aes:.4f}</span></div></div></div>')
+
+    return f'<div style="padding:8px">{"".join(bubbles)}</div>'
 
 # ============================================================
-# Build Gradio UI
+# Callbacks (no progress — avoids SSE/proxy issues)
+# ============================================================
+
+def chat_generate(ref_img, refs_extra, prompt, mode, size, neg, tokens, sess):
+    """Generate initial image. ref_img = single gr.Image, refs_extra = extra gr.Gallery."""
+    global _pipeline
+    if not prompt or not prompt.strip():
+        return sess, _render_chat(sess), None, ""
+
+    # Collect all reference images
+    all_imgs = []
+    if ref_img is not None:
+        all_imgs.append(ref_img)
+    if refs_extra is not None:
+        items = refs_extra if isinstance(refs_extra, (list, tuple)) else [refs_extra]
+        for item in items:
+            if isinstance(item, (Image.Image, str)):
+                all_imgs.append(item)
+            elif isinstance(item, dict):
+                all_imgs.append(item.get("image", item))
+
+    paths = _save_uploaded(all_imgs if all_imgs else None)
+    sess["ref_image_paths"] = paths
+
+    try:
+        _pipeline = PersonalizationPipeline(qwen_model_name=QWEN_VL_PATH, load_qwen_vl=True)
+        enriched = _pipeline.generate_personalized_prompt(
+            image_paths=paths, short_prompt=prompt.strip(), max_new_tokens=tokens,
+        )
+        _pipeline.unload_preference_encoder()
+        _pipeline.unload_qwen_vl()
+
+        result = _pipeline.generate_image_unified(
+            prompt=enriched,
+            mode="api" if mode == "API (DashScope)" else "local",
+            size=size, negative_prompt=neg, output_dir=str(OUTPUT_DIR),
+        )
+    except Exception as e:
+        return sess, _render_chat(sess), None, f"Error: {e}"
+
+    if result.get("success"):
+        img_path = result.get("image_path", "")
+        gen_img = None
+        try:
+            gen_img = Image.open(img_path).convert("RGB")
+        except Exception:
+            pass
+
+        cs = _clip_score(enriched, gen_img)
+        aes = _aesthetic_score(gen_img)
+
+        t = {"turn": len(sess.get("turn_history", [])) + 1, "feedback": prompt.strip(),
+             "prompt": enriched, "image_path": img_path, "clip_score": cs, "aesthetic_score": aes}
+        sess.setdefault("turn_history", []).append(t)
+        sess["current_prompt"] = enriched
+        sess["current_image_path"] = img_path
+        return sess, _render_chat(sess), gen_img, f"CLIP {cs:.4f}  ·  Aesthetic {aes:.4f}"
+
+    return sess, _render_chat(sess), None, f"Failed: {result.get('error')}"
+
+
+def chat_refine(feedback, mode, size, neg, tokens, sess):
+    """Refine current image with feedback."""
+    global _pipeline
+    if not sess.get("current_prompt"):
+        return sess, _render_chat(sess), None, "Generate an image first."
+    if not feedback or not feedback.strip():
+        return sess, _render_chat(sess), None, ""
+
+    try:
+        _pipeline = PersonalizationPipeline(qwen_model_name=QWEN_VL_PATH, load_qwen_vl=True)
+        if sess.get("ref_image_paths"):
+            try: _pipeline._load_preference_encoder_if_needed()
+            except Exception: pass
+
+        refined = _pipeline.refine_prompt_with_feedback(
+            current_prompt=sess["current_prompt"], user_feedback=feedback.strip(),
+            previous_image_path=sess.get("current_image_path"),
+            image_paths=sess.get("ref_image_paths"), max_new_tokens=tokens,
+        )
+        _pipeline.unload_preference_encoder()
+        _pipeline.unload_qwen_vl()
+
+        result = _pipeline.generate_image_unified(
+            prompt=refined,
+            mode="api" if mode == "API (DashScope)" else "local",
+            size=size, negative_prompt=neg, output_dir=str(OUTPUT_DIR),
+        )
+    except Exception as e:
+        return sess, _render_chat(sess), None, f"Error: {e}"
+
+    if result.get("success"):
+        img_path = result.get("image_path", "")
+        gen_img = None
+        try:
+            gen_img = Image.open(img_path).convert("RGB")
+        except Exception:
+            pass
+
+        cs = _clip_score(refined, gen_img)
+        aes = _aesthetic_score(gen_img)
+
+        t = {"turn": len(sess.get("turn_history", [])) + 1, "feedback": feedback.strip(),
+             "prompt": refined, "image_path": img_path, "clip_score": cs, "aesthetic_score": aes}
+        sess.setdefault("turn_history", []).append(t)
+        sess["current_prompt"] = refined
+        sess["current_image_path"] = img_path
+        return sess, _render_chat(sess), gen_img, f"CLIP {cs:.4f}  ·  Aesthetic {aes:.4f}"
+
+    return sess, _render_chat(sess), None, f"Failed: {result.get('error')}"
+
+
+def chat_reset():
+    empty = {"ref_image_paths": [], "turn_history": [], "current_prompt": "", "current_image_path": ""}
+    return empty, _render_chat(empty), None, ""
+
+
+# Simple in-process CLIP evaluator (no separate class needed)
+_eval = None
+def _get_eval():
+    global _eval
+    if _eval is None:
+        from evaluate_metrics import ImageGenerationEvaluator
+        _eval = ImageGenerationEvaluator()
+    return _eval
+
+def _clip_score(prompt, image):
+    if not image or not prompt: return 0.0
+    try: return _get_eval().clip_score(prompt, image)
+    except Exception: return 0.0
+
+def _aesthetic_score(image):
+    if not image: return 0.0
+    try: return _get_eval().aesthetic_score(image)
+    except Exception: return 0.0
+
+# ============================================================
+# UI
 # ============================================================
 
 def build_ui():
-    theme = gr.themes.Soft(primary_hue="blue")
+    theme = gr.themes.Soft(primary_hue="gray", secondary_hue="gray", neutral_hue="gray").set(
+        body_background_fill="#fafafa",
+        block_background_fill="#ffffff",
+        block_border_color="#e5e5e5",
+        block_border_width="1px",
+        block_radius="12px",
+        input_background_fill="#ffffff",
+        input_border_color="#d0d0d0",
+        button_primary_background_fill="#1a1a1a",
+        button_primary_background_fill_hover="#333333",
+        button_primary_text_color="#ffffff",
+    )
 
-    with gr.Blocks(theme=theme, title="Personalized Prompt-to-Image Generator") as app:
-        gr.Markdown("""
-        # 🎨 Personalized Prompt-to-Image Generator
-        ### Preference Alignment Pipeline: Reference Images + Short Text → Enriched Prompt → Qwen-Image
+    css = """
+    footer{display:none!important}
+    .gradio-container{max-width:900px!important;margin:0 auto!important}
+    #chat-panel{min-height:400px;max-height:60vh;overflow-y:auto}
+    ::-webkit-scrollbar{width:5px}
+    ::-webkit-scrollbar-track{background:transparent}
+    ::-webkit-scrollbar-thumb{background:#ddd;border-radius:3px}
+    """
 
-        **Pipeline:** CLIP ViT-L/14 → Image_MLP → Style Matching → Qwen3-VL-4B → Qwen-Image API
-        """)
+    with gr.Blocks(theme=theme, css=css, title="AI Image Studio") as app:
+        sess = gr.State({"ref_image_paths": [], "turn_history": [], "current_prompt": "", "current_image_path": ""})
+
+        gr.HTML('<div style="text-align:center;padding:24px 0 8px"><h1 style="font-size:22px;font-weight:600;color:#1a1a1a;margin:0;letter-spacing:-0.5px">AI Image Studio</h1><p style="color:#999;margin:6px 0 0;font-size:13px">Reference Images + Text → Enriched Prompt → Image</p></div>')
 
         with gr.Tabs():
-            # ================================================
-            # TAB 1: Generate
-            # ================================================
-            with gr.TabItem("🎯 Generate"):
+            # ============================================
+            # TAB: Chat
+            # ============================================
+            with gr.TabItem("Chat"):
                 with gr.Row():
-                    with gr.Column(scale=1):
-                        gr.Markdown("### 📥 Inputs")
-                        ref_imgs = gr.File(
-                            label="Reference Images (0-N, optional)",
-                            file_count="multiple",
-                            file_types=["image"],
-                        )
-                        short_prompt = gr.Textbox(
-                            label="Short Prompt",
-                            placeholder="一只小猫坐在月光下的窗台上",
-                            lines=2,
-                        )
-                        with gr.Row():
-                            mode_radio = gr.Radio(
-                                choices=["API (DashScope)", "Local (diffusers)"],
-                                value="API (DashScope)",
-                                label="Generation Mode",
-                            )
-                        size_dd = gr.Dropdown(
-                            choices=["1024*1024", "1664*928", "2048*2048"],
-                            value="2048*2048",
-                            label="Output Size",
-                        )
-                        neg_prompt = gr.Textbox(
-                            label="Negative Prompt",
-                            value="低分辨率，低画质，肢体畸形，手指畸形，画面过饱和，蜡像感",
-                            lines=2,
-                        )
-                        with gr.Accordion("Advanced Options", open=False):
-                            top_k = gr.Slider(1, 10, value=5, step=1,
-                                              label="Top-K Style Descriptors")
-                            temperature = gr.Slider(0.1, 1.5, value=0.7, step=0.1,
-                                                    label="Qwen-VL Temperature")
-                            max_tokens = gr.Slider(100, 500, value=300, step=50,
-                                                   label="Max Prompt Tokens")
+                    with gr.Column(scale=1, min_width=220):
+                        gr.Markdown("#### Reference Image")
+                        ref_img = gr.Image(label=None, type="pil", show_label=False, height=160)
 
-                        gen_btn = gr.Button("🚀 Generate", variant="primary", size="lg")
+                        gr.Markdown("#### Settings")
+                        mode_r = gr.Radio(["API (DashScope)", "Local (diffusers)"], value="API (DashScope)", label="Engine")
+                        size_d = gr.Dropdown(["1024*1024", "1664*928", "2048*2048"], value="2048*2048", label="Size")
+                        neg_t = gr.Textbox(label="Negative Prompt", value="low quality, blurry, distorted", lines=1, max_lines=2)
+                        with gr.Accordion("Advanced", open=False):
+                            tok_s = gr.Slider(100, 500, value=300, step=50, label="Max Tokens")
+                        reset_btn = gr.Button("New Session", size="sm")
 
-                    with gr.Column(scale=1):
-                        gr.Markdown("### 📤 Outputs")
-                        enriched_prompt_out = gr.Textbox(
-                            label="Enriched Prompt", lines=6, interactive=False)
-                        image_path_out = gr.Textbox(
-                            label="Image Path", interactive=False, visible=False)
-                        gen_image_out = gr.Image(label="Generated Image", type="pil")
-                        status_out = gr.Markdown("")
+                    with gr.Column(scale=3):
+                        chat_html = gr.HTML(value=_render_chat({"turn_history": []}), elem_id="chat-panel")
 
-                gen_btn.click(
-                    fn=generate_single,
-                    inputs=[ref_imgs, short_prompt, mode_radio, size_dd,
-                            neg_prompt, top_k, temperature, max_tokens],
-                    outputs=[enriched_prompt_out, image_path_out, gen_image_out, status_out],
-                )
+                        with gr.Group():
+                            prompt_t = gr.Textbox(label=None, show_label=False, placeholder="Describe the image you want to create...", lines=1, scale=5)
+                            with gr.Row():
+                                gen_btn = gr.Button("Generate", variant="primary")
+                                dummy_img = gr.Image(type="pil", visible=False)
+                        with gr.Group():
+                            refine_t = gr.Textbox(label=None, show_label=False, placeholder="How to change it? e.g. warmer, add flowers...", lines=1, scale=5)
+                            with gr.Row():
+                                refine_btn = gr.Button("Refine")
+                                dummy_img2 = gr.Image(type="pil", visible=False)
+                        status_t = gr.Textbox(label=None, show_label=False, interactive=False, container=False)
 
-            # ================================================
-            # TAB 2: Compare
-            # ================================================
-            with gr.TabItem("🔬 Compare Strategies"):
-                gr.Markdown("""
-                ### Side-by-side comparison: 0-image (neutral) vs N-image (preference-aligned)
-                Upload reference images to see how preference alignment changes the output.
-                """)
-                with gr.Row():
-                    with gr.Column(scale=1):
-                        cmp_refs = gr.File(
-                            label="Reference Images",
-                            file_count="multiple",
-                            file_types=["image"],
-                        )
-                        cmp_prompt = gr.Textbox(
-                            label="Short Prompt",
-                            placeholder="一只小猫坐在月光下的窗台上",
-                            lines=2,
-                        )
-                        cmp_size = gr.Dropdown(
-                            choices=["1024*1024", "1664*928", "2048*2048"],
-                            value="2048*2048", label="Output Size",
-                        )
-                        cmp_neg = gr.Textbox(
-                            label="Negative Prompt",
-                            value="低分辨率，低画质，肢体畸形",
-                            lines=1,
-                        )
-                        cmp_btn = gr.Button("🔬 Run Comparison", variant="primary", size="lg")
+                gen_btn.click(fn=chat_generate, inputs=[ref_img, gr.State(None), prompt_t, mode_r, size_d, neg_t, tok_s, sess], outputs=[sess, chat_html, dummy_img, status_t]).then(fn=lambda: "", inputs=[], outputs=[prompt_t])
+                refine_btn.click(fn=chat_refine, inputs=[refine_t, mode_r, size_d, neg_t, tok_s, sess], outputs=[sess, chat_html, dummy_img2, status_t]).then(fn=lambda: "", inputs=[], outputs=[refine_t])
+                refine_t.submit(fn=chat_refine, inputs=[refine_t, mode_r, size_d, neg_t, tok_s, sess], outputs=[sess, chat_html, dummy_img2, status_t]).then(fn=lambda: "", inputs=[], outputs=[refine_t])
+                reset_btn.click(fn=chat_reset, inputs=[], outputs=[sess, chat_html, dummy_img, status_t])
 
-                    with gr.Column(scale=2):
-                        with gr.Row():
-                            cmp_img_A = gr.Image(label="A: Neutral Centroid (0-img)", type="pil")
-                            cmp_img_B = gr.Image(label="B: Preference Aligned (N-img)", type="pil")
-                        with gr.Row():
-                            cmp_status_A = gr.Markdown("", label="Strategy A")
-                            cmp_status_B = gr.Markdown("", label="Strategy B")
-                        cmp_summary = gr.Markdown("")
-
-                cmp_btn.click(
-                    fn=compare_strategies,
-                    inputs=[cmp_refs, cmp_prompt, cmp_size, cmp_neg],
-                    outputs=[cmp_img_A, cmp_img_B, cmp_status_A, cmp_status_B, cmp_summary],
-                )
-
-            # ================================================
-            # TAB 3: Evaluate
-            # ================================================
-            with gr.TabItem("📊 Evaluate"):
-                gr.Markdown("""
-                ### Automated Metrics + Human Ratings
-                Upload a generated image to compute CLIP Score and Aesthetic Score.
-                Optionally rate the image for aesthetics and prompt alignment.
-                """)
-                with gr.Row():
-                    with gr.Column(scale=1):
-                        eval_image = gr.Image(label="Generated Image", type="pil")
-                        eval_prompt = gr.Textbox(
-                            label="T2I Prompt Used",
-                            placeholder="Paste the enriched prompt here...",
-                            lines=3,
-                        )
-                        eval_ref = gr.Image(label="Reference Image (optional)", type="pil")
-                        eval_btn = gr.Button("📊 Compute Metrics", variant="primary")
-
-                    with gr.Column(scale=1):
-                        eval_scores = gr.Markdown("### Scores will appear here...")
-                        eval_json = gr.Textbox(label="Raw JSON", visible=False)
-
-                eval_btn.click(
-                    fn=evaluate_image,
-                    inputs=[eval_image, eval_prompt, eval_ref],
-                    outputs=[eval_scores, eval_json],
-                )
-
-                gr.Markdown("---")
-                gr.Markdown("### ⭐ Human Rating")
-
-                with gr.Row():
-                    with gr.Column(scale=1):
-                        rate_image = gr.Image(label="Image to Rate", type="pil")
-                        rate_prompt = gr.Textbox(
-                            label="Prompt Used",
-                            placeholder="Paste the enriched prompt...",
-                            lines=2,
-                        )
-                    with gr.Column(scale=1):
-                        aes_slider = gr.Slider(1, 5, value=3, step=1,
-                                               label="Aesthetics (1=Poor, 5=Excellent)")
-                        align_slider = gr.Slider(1, 5, value=3, step=1,
-                                                 label="Prompt Alignment (1=Poor, 5=Perfect)")
-                        rate_notes = gr.Textbox(label="Notes (optional)", lines=2)
-                        rate_btn = gr.Button("⭐ Submit Rating", variant="secondary")
-                        rate_status = gr.Markdown("")
-
-                rate_btn.click(
-                    fn=submit_rating,
-                    inputs=[rate_image, rate_prompt, aes_slider, align_slider, rate_notes],
-                    outputs=[rate_status],
-                )
-
-        # Footer
-        gr.Markdown("""
-        ---
-        **Pipeline:** CLIP ViT-L/14 + Image_MLP → Top-K Style Matching → Qwen3-VL-4B-Instruct → Qwen-Image API
-
-        **Models:** Preference Align (Val AUC=0.8934) | Qwen3-VL-4B-Instruct | qwen-image-2.0-pro
-        """)
+        gr.HTML('<div style="text-align:center;padding:20px;color:#ccc;font-size:11px">CLIP ViT-L/14 · Qwen3-VL · Qwen-Image</div>')
 
     return app
 
 
-# ============================================================
-# Main
-# ============================================================
-
 def main():
-    parser = argparse.ArgumentParser(description="Web UI for personalized image generation")
-    parser.add_argument("--port", type=int, default=7860, help="Server port")
-    parser.add_argument("--share", action="store_true", help="Create public Gradio link")
-    parser.add_argument("--host", type=str, default="0.0.0.0", help="Server host")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--port", type=int, default=7860)
+    parser.add_argument("--host", type=str, default="0.0.0.0")
     args = parser.parse_args()
-
     app = build_ui()
-    app.queue(max_size=10).launch(
-        server_name=args.host,
-        server_port=args.port,
-        share=args.share,
-    )
+    # NO queue — avoids WebSocket dependency through proxies
+    app.launch(server_name=args.host, server_port=args.port, share=False, show_error=True)
 
 
 if __name__ == "__main__":

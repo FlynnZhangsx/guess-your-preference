@@ -427,6 +427,155 @@ def save_report(all_results: List[Dict], output_path: str):
 
 
 # ============================================================
+# ImageGenerationEvaluator — used by webui.py
+# ============================================================
+
+class ImageGenerationEvaluator(CLIPEvaluator):
+    """
+    Extended evaluator for the Web UI providing clip_score(),
+    aesthetic_score(), prompt_richness(), and evaluate() methods
+    compatible with the webui.py interface.
+    """
+
+    def clip_score(self, prompt: str, image, ref_image=None) -> float:
+        """
+        Compute CLIP cosine similarity between prompt and generated image.
+
+        Args:
+            prompt:   the enriched T2I prompt
+            image:    PIL Image of the generated image
+            ref_image: (unused, kept for compatibility)
+        Returns:
+            float in [-1, 1]
+        """
+        if image is None:
+            return 0.0
+        import tempfile
+        import os
+        # Save PIL Image to temp file (CLIPEvaluator works with paths)
+        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
+            if hasattr(image, 'save'):
+                image.save(tmp.name)
+            img_path = tmp.name
+        try:
+            score = self.text_image_clip_score(prompt, img_path)
+            return score if score is not None else 0.0
+        finally:
+            try:
+                os.unlink(img_path)
+            except Exception:
+                pass
+
+    def aesthetic_score(self, image) -> float:
+        """
+        Compute a heuristic aesthetic quality score for the image.
+
+        Uses CLIP similarity against a set of high-quality aesthetic
+        reference descriptors as a proxy for aesthetic quality.
+        Higher = more aesthetically pleasing.
+        """
+        if image is None:
+            return 0.0
+
+        # Aesthetic reference descriptors (high-quality image traits)
+        aesthetic_descriptors = [
+            "a beautifully composed professional photograph, excellent lighting, sharp focus",
+            "award-winning artistic composition, masterful use of color and contrast",
+            "visually stunning high-quality image, rich detail and texture",
+            "professionally shot photograph with perfect exposure and white balance",
+        ]
+
+        import tempfile
+        import os
+        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
+            if hasattr(image, 'save'):
+                image.save(tmp.name)
+            img_path = tmp.name
+        try:
+            # Encode image
+            try:
+                pil_img = Image.open(img_path).convert("RGB")
+            except Exception:
+                return 0.0
+            img_inputs = self.processor(images=pil_img, return_tensors="pt").to(self.device)
+            img_emb = self.model.get_image_features(**img_inputs)
+            img_emb = F.normalize(img_emb, dim=-1)
+
+            # Encode aesthetic descriptors
+            scores = []
+            for desc in aesthetic_descriptors:
+                text_inputs = self.processor(
+                    text=[desc], return_tensors="pt",
+                    padding=True, truncation=True, max_length=77
+                ).to(self.device)
+                text_emb = self.model.get_text_features(**text_inputs)
+                text_emb = F.normalize(text_emb, dim=-1)
+                score = (text_emb @ img_emb.T).item()
+                scores.append(score)
+
+            return float(torch.tensor(scores).mean().item())
+        finally:
+            try:
+                os.unlink(img_path)
+            except Exception:
+                pass
+
+    def prompt_richness(self, prompt: str) -> dict:
+        """
+        Analyze prompt richness: word count, unique word ratio,
+        and count of detail-oriented keywords.
+        """
+        if not prompt:
+            return {"word_count": 0, "unique_ratio": 0.0, "detail_keywords": 0}
+
+        import re
+        words = re.findall(r'\b\w+\b', prompt.lower())
+        word_count = len(words)
+        unique_ratio = len(set(words)) / max(word_count, 1)
+
+        # Count detail-oriented keywords
+        detail_keywords = {
+            "lighting", "shadow", "texture", "composition", "color",
+            "detail", "resolution", "contrast", "palette", "atmosphere",
+            "mood", "tone", "gradient", "focus", "bokeh", "depth",
+            "reflection", "ambient", "volumetric", "cinematic",
+            "photorealistic", "hyper", "professional", "elegant",
+            "dramatic", "soft", "sharp", "warm", "cool", "golden",
+            "artistic", "vibrant", "muted", "saturated", "desaturated",
+            "layout", "typography", "negative space", "balance",
+        }
+        detail_count = sum(1 for w in words if w in detail_keywords)
+
+        return {
+            "word_count": word_count,
+            "unique_ratio": round(unique_ratio, 4),
+            "detail_keywords": detail_count,
+        }
+
+    def evaluate(self, prompt: str, generated_image,
+                 reference_image=None) -> dict:
+        """
+        Full evaluation: CLIP score + aesthetic score + prompt richness.
+        Compatible with webui.py's evaluate_image() callback.
+        """
+        cs = self.clip_score(prompt, generated_image)
+        aes = self.aesthetic_score(generated_image)
+        pr = self.prompt_richness(prompt)
+
+        result = {
+            "clip_score": round(cs, 4),
+            "aesthetic_score": round(aes, 4),
+            "prompt_richness": pr,
+        }
+
+        if reference_image is not None:
+            result["style_consistency"] = round(
+                self.clip_score(prompt, reference_image), 4)
+
+        return result
+
+
+# ============================================================
 # Main
 # ============================================================
 

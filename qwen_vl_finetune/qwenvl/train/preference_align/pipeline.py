@@ -68,7 +68,7 @@ BASE_DIR = Path(__file__).resolve().parent
 CHECKPOINT_PATH = BASE_DIR / "preference_model_best.pth"
 CLIP_MODEL_NAME = "openai/clip-vit-large-patch14"
 QWEN_VL_MODEL_NAME = "Qwen/Qwen3-VL-8B-Instruct"
-DASHSCOPE_API_KEY = "sk-54f1354ff3754d9682f73aea34ad2b47"  # 百炼 API Key
+DASHSCOPE_API_KEY = os.environ.get("DASHSCOPE_API_KEY", "")  # Set via environment variable
 
 # ============================================================
 # Aesthetic style descriptors (pre-encoded by CLIP text encoder)
@@ -374,6 +374,119 @@ class PersonalizationPipeline:
 
         print(f"\n[Output] {generated_prompt[:200]}...")
         return generated_prompt
+
+    def refine_prompt_with_feedback(
+        self,
+        current_prompt: str,
+        user_feedback: str,
+        previous_image_path: Optional[str] = None,
+        image_paths: Optional[List[str]] = None,
+        max_new_tokens: int = 300,
+    ) -> str:
+        """
+        Multi-turn refinement: refine an existing enriched prompt based on
+        user feedback, optionally using the previous generated image as visual
+        context for Qwen-VL.
+
+        Args:
+            current_prompt:       the enriched prompt from the previous turn
+            user_feedback:        user's natural-language modification request
+            previous_image_path:  path to the previously generated image (for visual context)
+            image_paths:          original reference images (for style consistency)
+            max_new_tokens:       max tokens for the refined prompt
+
+        Returns:
+            A refined English T2I prompt incorporating the user's feedback.
+        """
+        print(f"\n{'='*60}")
+        print(f"[Refine] Feedback: \"{user_feedback}\"")
+        print(f"  Previous prompt: {current_prompt[:150]}...")
+        if previous_image_path:
+            print(f"  Visual context: {previous_image_path}")
+        print(f"{'='*60}")
+
+        # Build system instruction for the refinement task
+        system_instruction = (
+            "You are an expert Text-to-Image prompt engineer specializing in "
+            "iterative prompt refinement. Below is a previously generated image "
+            "prompt and the user's feedback on how to improve it. "
+            "Your task: produce a SINGLE refined English prompt that:\n"
+            "1. Preserves the core subject and composition from the original prompt\n"
+            "2. Incorporates ALL of the user's requested modifications precisely\n"
+            "3. Maintains or improves the artistic quality, detail, and specificity\n"
+            "4. Is self-contained — the refined prompt alone is sufficient for image generation\n\n"
+            "Output ONLY the refined English prompt. No explanations, no alternatives."
+        )
+
+        if self.qwen_model is not None and self.qwen_tokenizer is not None:
+            # Real Qwen3-VL inference with optional image feedback
+            messages = [
+                {"role": "system", "content": [{"type": "text", "text": system_instruction}]},
+            ]
+
+            # Build user message: may include the previous image as visual context
+            user_content = []
+            if previous_image_path and os.path.exists(previous_image_path):
+                try:
+                    # Load image as PIL for the multimodal message
+                    from PIL import Image as PILImage
+                    prev_img = PILImage.open(previous_image_path).convert("RGB")
+                    user_content.append({"type": "image", "image": prev_img})
+                except Exception as e:
+                    print(f"  [WARN] Could not load previous image: {e}")
+
+            user_content.append({
+                "type": "text",
+                "text": (
+                    f"**Original prompt:**\n{current_prompt}\n\n"
+                    f"**User feedback (what to change):**\n{user_feedback}\n\n"
+                    f"Write the refined prompt:"
+                ),
+            })
+            messages.append({"role": "user", "content": user_content})
+
+            inputs = self.qwen_tokenizer.apply_chat_template(
+                messages, tokenize=True, add_generation_prompt=True,
+                return_dict=True, return_tensors="pt",
+            ).to(self.device)
+
+            with torch.no_grad():
+                generated_ids = self.qwen_model.generate(
+                    **inputs, max_new_tokens=max_new_tokens,
+                    do_sample=True, temperature=0.7, top_p=0.9,
+                )
+            input_len = inputs["input_ids"].size(1)
+            refined_prompt = self.qwen_tokenizer.decode(
+                generated_ids[0][input_len:], skip_special_tokens=True
+            ).strip()
+        else:
+            # Simulation mode: append feedback to the prompt with refinement language
+            refined_prompt = self._simulate_refinement(current_prompt, user_feedback)
+
+        print(f"\n[Refine Output] {refined_prompt[:200]}...")
+        return refined_prompt
+
+    def _simulate_refinement(self, current_prompt: str, user_feedback: str) -> str:
+        """Mock refinement for offline testing (when Qwen-VL is not loaded).
+
+        Intelligently incorporates the user's feedback into the prompt by
+        appending it with natural refinement language, rather than just
+        concatenating.
+        """
+        # Extract the short description from the current prompt (first sentence-ish)
+        sentences = current_prompt.replace('\n', ' ').split('. ')
+        core = sentences[0] if sentences else current_prompt
+
+        # Build a refined version incorporating the feedback
+        refined = (
+            f"{core}. "
+            f"Additionally incorporating user refinement: {user_feedback}. "
+            f"The scene is enhanced with these adjustments applied thoughtfully, "
+            f"maintaining exceptional composition, cinematic lighting with soft "
+            f"volumetric shadows, professionally color-graded palette, "
+            f"8K photorealistic detail, elegant typography layout, premium print quality."
+        )
+        return refined
 
     def _simulate(self, short_prompt: str, style_text: str) -> str:
         """Mock generation for offline testing (when Qwen-VL is not loaded)."""

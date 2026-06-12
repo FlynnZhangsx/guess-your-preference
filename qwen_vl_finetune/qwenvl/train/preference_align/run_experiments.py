@@ -64,8 +64,23 @@ class TestCase:
     description: str = ""
 
 
+# Common reference image for test cases 1-15
+_CANKAO_IMG = "/home/coder/project/data/mllm/cankao.png"
+
+# Shared Ghibli-style hard prompt (Miyazaki healing aesthetic of cankao.png)
+_GHIBLI_HARD_STYLE = (
+    "Ghibli-inspired hand-drawn animation aesthetic: soft watercolor textures and delicate "
+    "ink linework, fresh pastel color palette with gentle warm undertones, diffused natural "
+    "sunlight with soft atmospheric shadows, pastoral idyllic scenery with serene tranquility, "
+    "hand-painted matte painting quality with dreamy nostalgic mood, harmonious balanced "
+    "composition, Miyazaki healing ambiance — calm, warm, and soul-soothing."
+)
+
 # ---- Define your test cases here ----
 TEST_CASES: List[TestCase] = [
+    # ============================================================
+    # Original case (separate ref image)
+    # ============================================================
     TestCase(
         id="fat_cat_cooking",
         short_prompt="一只胖胖的大橘猫在做饭",
@@ -80,27 +95,114 @@ TEST_CASES: List[TestCase] = [
         ),
         description="A fat orange tabby cat cooking in the kitchen",
     ),
+
+    # ============================================================
+    # 15 new test cases — all use cankao.png (Ghibli healing style)
+    # ============================================================
     TestCase(
-        id="summer_poster",
-        short_prompt="夏日海滩音乐节海报",
-        ref_images=[],
-        hard_style=(
-            "Style: vibrant tropical colors, warm golden sunset glow, "
-            "dynamic asymmetrical composition, bold graphic typography area, "
-            "high-energy festival atmosphere, glossy magazine print quality."
-        ),
-        description="Summer beach music festival poster",
+        id="forest_treehouse",
+        short_prompt="森林深处的树屋，清晨阳光透过树叶洒落",
+        ref_images=[_CANKAO_IMG],
+        hard_style=_GHIBLI_HARD_STYLE,
+        description="Treehouse deep in the forest with morning sunlight filtering through leaves",
     ),
     TestCase(
-        id="city_night",
-        short_prompt="赛博朋克风格的未来城市夜景",
-        ref_images=[],
-        hard_style=(
-            "Style: neon-drenched cyberpunk aesthetic, high-contrast lighting, "
-            "wet reflective streets, holographic advertisements, deep purple and cyan color palette, "
-            "dense urban verticality, cinematic sci-fi atmosphere, rain-slicked surfaces."
-        ),
-        description="Cyberpunk futuristic city at night",
+        id="cat_flower_meadow",
+        short_prompt="一只小猫在开满野花的山坡上打盹",
+        ref_images=[_CANKAO_IMG],
+        hard_style=_GHIBLI_HARD_STYLE,
+        description="A cat napping on a hillside covered with wildflowers",
+    ),
+    TestCase(
+        id="seaside_dusk",
+        short_prompt="海边小镇的黄昏，海鸥在晚霞中飞翔",
+        ref_images=[_CANKAO_IMG],
+        hard_style=_GHIBLI_HARD_STYLE,
+        description="Seaside town at dusk with seagulls flying in the sunset glow",
+    ),
+    TestCase(
+        id="starry_meadow",
+        short_prompt="星空下的草原，萤火虫在夜色中飞舞",
+        ref_images=[_CANKAO_IMG],
+        hard_style=_GHIBLI_HARD_STYLE,
+        description="Grassland under starry sky with fireflies dancing in the night",
+    ),
+    TestCase(
+        id="rainy_old_street",
+        short_prompt="雨后的江南老街，青石板路倒映着灯笼微光",
+        ref_images=[_CANKAO_IMG],
+        hard_style=_GHIBLI_HARD_STYLE,
+        description="Old Jiangnan street after rain with lantern light reflecting on cobblestone",
+    ),
+    TestCase(
+        id="snow_mountain_cabin",
+        short_prompt="雪山脚下的小木屋，炊烟袅袅升起",
+        ref_images=[_CANKAO_IMG],
+        hard_style=_GHIBLI_HARD_STYLE,
+        description="Small cabin at the foot of a snow mountain with chimney smoke rising",
+    ),
+    TestCase(
+        id="cherry_blossom_girl",
+        short_prompt="樱花树下的少女，花瓣随风飘落",
+        ref_images=[_CANKAO_IMG],
+        hard_style=_GHIBLI_HARD_STYLE,
+        description="A girl under a cherry blossom tree with petals drifting in the breeze",
+    ),
+    TestCase(
+        id="train_wheat_field",
+        short_prompt="一列老式火车穿行在金黄色的麦田中",
+        ref_images=[_CANKAO_IMG],
+        hard_style=_GHIBLI_HARD_STYLE,
+        description="A vintage train traveling through golden wheat fields",
+    ),
+    TestCase(
+        id="library_window",
+        short_prompt="图书馆靠窗的书桌，午后阳光斜照在翻开的书上",
+        ref_images=[_CANKAO_IMG],
+        hard_style=_GHIBLI_HARD_STYLE,
+        description="Library desk by a window with afternoon sunlight on an open book",
+    ),
+    TestCase(
+        id="autumn_maple_stream",
+        short_prompt="秋天的枫叶林，一条清澈的小溪蜿蜒流过",
+        ref_images=[_CANKAO_IMG],
+        hard_style=_GHIBLI_HARD_STYLE,
+        description="Autumn maple forest with a clear stream winding through",
+    ),
+    TestCase(
+        id="japanese_garden_cat",
+        short_prompt="猫咪在日式庭院的水池边悠闲地喝水",
+        ref_images=[_CANKAO_IMG],
+        hard_style=_GHIBLI_HARD_STYLE,
+        description="A cat leisurely drinking water by a pond in a Japanese garden",
+    ),
+    TestCase(
+        id="mushroom_house",
+        short_prompt="童话里的蘑菇小屋，被五彩缤纷的花园环绕",
+        ref_images=[_CANKAO_IMG],
+        hard_style=_GHIBLI_HARD_STYLE,
+        description="Fairy tale mushroom cottage surrounded by a colorful garden",
+    ),
+    TestCase(
+        id="lake_boat",
+        short_prompt="湖面上的一叶小舟，远处青山倒映在平静的水中",
+        ref_images=[_CANKAO_IMG],
+        hard_style=_GHIBLI_HARD_STYLE,
+        description="A small boat on a lake with distant green mountains reflected in still water",
+    ),
+    TestCase(
+        id="winter_coffee_shop",
+        short_prompt="冬日清晨的街角咖啡店，窗外飘着细雪",
+        ref_images=[_CANKAO_IMG],
+        hard_style=_GHIBLI_HARD_STYLE,
+        description="Winter morning at a street-corner coffee shop with light snow falling outside",
+    ),
+    TestCase(
+        id="sunflower_bicycle",
+        short_prompt="向日葵花田中间的小路上，停着一辆老式自行车",
+        ref_images=[_CANKAO_IMG],
+        hard_style=_GHIBLI_HARD_STYLE,
+        description="An old bicycle parked on a path through a sunflower field",
     ),
 ]
 

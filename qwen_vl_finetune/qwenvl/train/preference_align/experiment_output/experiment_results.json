@@ -1,4 +1,616 @@
 {
+  "starry_meadow": {
+    "id": "starry_meadow",
+    "short_prompt": "星空下的草原，萤火虫在夜色中飞舞",
+    "ref_images": [
+      "/home/coder/project/data/mllm/cankao.png"
+    ],
+    "hard_style": "Ghibli-inspired hand-drawn animation aesthetic: soft watercolor textures and delicate ink linework, fresh pastel color palette with gentle warm undertones, diffused natural sunlight with soft atmospheric shadows, pastoral idyllic scenery with serene tranquility, hand-painted matte painting quality with dreamy nostalgic mood, harmonious balanced composition, Miyazaki healing ambiance — calm, warm, and soul-soothing.",
+    "description": "Grassland under starry sky with fireflies dancing in the night",
+    "mode_A": {
+      "mode": "A (Zero-shot Baseline)",
+      "enriched_prompt": "Under a vast starry sky, a serene grassland stretches endlessly, with glowing fireflies fluttering gracefully through the twilight air, their soft bioluminescent lights dancing like tiny lanterns against the deep indigo and violet hues of the night. The scene is bathed in gentle, ambient moonlight, creating a tranquil, magical atmosphere. The grass is softly illuminated, with scattered fireflies adding dynamic movement to the stillness. Rendered in a dreamlike, cinematic style with hyper-realistic textures and soft bokeh, the image captures the quiet wonder of nature at night — vivid yet peaceful, with a touch of ethereal fantasy. High-resolution, 8K, detailed lighting and depth of field, evoking a sense of awe and calm.",
+      "prompt_words": 111,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/starry_meadow/starry_meadow_mode_A.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/starry_meadow/starry_meadow_mode_A.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/9b/20260611/51613171/2d06ba25-490b-42a8-a001-a720848d9e50.png?Expires=1781789720&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=z0p33F2lN2eJIH5pyGIIF%2B53vf0%3D",
+        "prompt_used": "Under a vast starry sky, a serene grassland stretches endlessly, with glowing fireflies fluttering gracefully through the twilight air, their soft bioluminescent lights dancing like tiny lanterns against the deep indigo and violet hues of the night. The scene is bathed in gentle, ambient moonlight, creating a tranquil, magical atmosphere. The grass is softly illuminated, with scattered fireflies adding dynamic movement to the stillness. Rendered in a dreamlike, cinematic style with hyper-realistic textures and soft bokeh, the image captures the quiet wonder of nature at night — vivid yet peaceful, with a touch of ethereal fantasy. High-resolution, 8K, detailed lighting and depth of field, evoking a sense of awe and calm.",
+        "status": "generated"
+      }
+    },
+    "mode_B": {
+      "mode": "B (Hard Prompting)",
+      "enriched_prompt": "A tranquil, Ghibli-inspired hand-drawn animation scene of an endless grassland under a vast, star-strewn night sky, where glowing fireflies drift gently through the air like tiny lanterns, their soft luminescence casting gentle, ethereal glows on the grass. The composition is harmoniously balanced, with a winding path of dew-kissed grass leading into the distance, flanked by whispering wildflowers and tall reeds. The color palette is a dreamy pastel blend of soft lavender, pale mint, and warm amber, with subtle golden undertones from diffused moonlight filtering through the canopy of distant trees. Delicate ink linework outlines every blade of grass and insect wing, while watercolor washes create a soft, painterly texture with gentle atmospheric depth and muted shadows. The mood is profoundly serene and nostalgic, evoking Miyazaki’s signature healing ambiance — calm, warm, and soul-soothing, as if time itself has paused to admire the quiet magic of nature’s quiet glow. Rendered in a hand-painted matte painting style, this scene feels like a memory preserved in ink and watercolor, inviting the viewer to breathe deeply and feel the gentle pulse of the earth beneath a sky full of stars.",
+      "prompt_words": 186,
+      "hard_style_used": "Ghibli-inspired hand-drawn animation aesthetic: soft watercolor textures and delicate ink linework, fresh pastel color palette with gentle warm undertones, diffused natural sunlight with soft atmospheric shadows, pastoral idyllic scenery with serene tranquility, hand-painted matte painting quality with dreamy nostalgic mood, harmonious balanced composition, Miyazaki healing ambiance — calm, warm, and soul-soothing.",
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/starry_meadow/starry_meadow_mode_B.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/starry_meadow/starry_meadow_mode_B.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/77/20260611/51613171/b6968dac-d815-4edc-bc17-cba538e540ba.png?Expires=1781789766&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=By9IZVnr7H0awEqgTw2r56sfPrk%3D",
+        "prompt_used": "A tranquil, Ghibli-inspired hand-drawn animation scene of an endless grassland under a vast, star-strewn night sky, where glowing fireflies drift gently through the air like tiny lanterns, their soft luminescence casting gentle, ethereal glows on the grass. The composition is harmoniously balanced, with a winding path of dew-kissed grass leading into the distance, flanked by whispering wildflowers and tall reeds. The color palette is a dreamy pastel blend of soft lavender, pale mint, and warm amber, with subtle golden undertones from diffused moonlight filtering through the canopy of distant trees. Delicate ink linework outlines every blade of grass and insect wing, while watercolor washes create a soft, painterly texture with gentle atmospheric depth and muted shadows. The mood is profoundly serene and nostalgic, evoking Miyazaki’s signature healing ambiance — calm, warm, and soul-soothing, as if time itself has paused to admire the quiet magic of nature’s quiet glow. Rendered in a hand-painted matte painting style, this scene feels like a memory preserved in ink and watercolor, inviting the viewer to breathe deeply and feel the gentle pulse of the earth beneath a sky full of stars.",
+        "status": "generated"
+      }
+    },
+    "mode_C": {
+      "mode": "C (Ours: Preference Alignment)",
+      "enriched_prompt": "A breathtaking hand-drawn illustration in watercolor texture, capturing a vast, tranquil grassland under a star-studded night sky, with delicate fireflies glowing softly as they drift through the air like tiny lanterns. Warm golden amber and deep indigo hues dominate the scene, enhanced by a soft, dreamy romantic haze and subtle lens flare from the distant stars. The grass sways gently in a whispering breeze, illuminated by the ethereal glow of the fireflies and faint moonlight filtering through the canopy. Composition features a low-angle perspective, drawing the viewer into the expansive landscape, with scattered fireflies creating a sense of depth and magic. Rendered in photorealistic 8K detail with hyper-detailed textures—each blade of grass, every shimmering insect, and the twinkling stars rendered with lifelike precision—this image evokes a serene, enchanting, and timeless atmosphere, blending artistic brushstrokes with cinematic lighting.",
+      "prompt_words": 137,
+      "style_text": "The user's aesthetic preferences lean toward: golden hour backlight, lens flare, dreamy romantic haze; with influences of warm golden amber tones, sunset hues, rich earthy browns; and elements of soft diffused natural window light, gentle morning glow, airy atmosphere. Overall vibe: hand-drawn illustration, watercolor textures, artistic brushstrokes, photorealistic 8K rendering, hyper-detailed, lifelike textures.",
+      "num_ref_images": 1,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/starry_meadow/starry_meadow_mode_C.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/starry_meadow/starry_meadow_mode_C.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/4b/20260611/51613171/283cb429-97b5-438b-9d86-fee6cb8987a6.png?Expires=1781789813&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=uEt0LUyIPQPmy%2FL3oeVuRkM4mYc%3D",
+        "prompt_used": "A breathtaking hand-drawn illustration in watercolor texture, capturing a vast, tranquil grassland under a star-studded night sky, with delicate fireflies glowing softly as they drift through the air like tiny lanterns. Warm golden amber and deep indigo hues dominate the scene, enhanced by a soft, dreamy romantic haze and subtle lens flare from the distant stars. The grass sways gently in a whispering breeze, illuminated by the ethereal glow of the fireflies and faint moonlight filtering through the canopy. Composition features a low-angle perspective, drawing the viewer into the expansive landscape, with scattered fireflies creating a sense of depth and magic. Rendered in photorealistic 8K detail with hyper-detailed textures—each blade of grass, every shimmering insect, and the twinkling stars rendered with lifelike precision—this image evokes a serene, enchanting, and timeless atmosphere, blending artistic brushstrokes with cinematic lighting.",
+        "status": "generated"
+      }
+    }
+  },
+  "rainy_old_street": {
+    "id": "rainy_old_street",
+    "short_prompt": "雨后的江南老街，青石板路倒映着灯笼微光",
+    "ref_images": [
+      "/home/coder/project/data/mllm/cankao.png"
+    ],
+    "hard_style": "Ghibli-inspired hand-drawn animation aesthetic: soft watercolor textures and delicate ink linework, fresh pastel color palette with gentle warm undertones, diffused natural sunlight with soft atmospheric shadows, pastoral idyllic scenery with serene tranquility, hand-painted matte painting quality with dreamy nostalgic mood, harmonious balanced composition, Miyazaki healing ambiance — calm, warm, and soul-soothing.",
+    "description": "Old Jiangnan street after rain with lantern light reflecting on cobblestone",
+    "mode_A": {
+      "mode": "A (Zero-shot Baseline)",
+      "enriched_prompt": "A tranquil after-rain scene in an ancient Jiangnan alleyway, where mossy, wet cobblestones reflect the soft glow of hanging lanterns, creating a dreamy, symmetrical mirror effect. The lanterns cast warm amber light against the cool, misty atmosphere, with delicate droplets clinging to stone and eaves. Traditional wooden shopfronts and tiled roofs line the narrow street, softened by diffused morning light. The composition is centered, with shallow depth of field emphasizing the reflective surface and glowing lanterns, rendered in a painterly, cinematic style with rich textures, muted earth tones accented by golden lanterns, evoking serenity and timeless charm. High-resolution, photorealistic with artistic brushstroke finish.",
+      "prompt_words": 103,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/rainy_old_street/rainy_old_street_mode_A.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/rainy_old_street/rainy_old_street_mode_A.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/b1/20260611/51613171/9629b72e-fac8-41ee-a132-c0a51769c939.png?Expires=1781789855&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=q3Qh2qBJY6TJ4mCoNNVu5R9Guvk%3D",
+        "prompt_used": "A tranquil after-rain scene in an ancient Jiangnan alleyway, where mossy, wet cobblestones reflect the soft glow of hanging lanterns, creating a dreamy, symmetrical mirror effect. The lanterns cast warm amber light against the cool, misty atmosphere, with delicate droplets clinging to stone and eaves. Traditional wooden shopfronts and tiled roofs line the narrow street, softened by diffused morning light. The composition is centered, with shallow depth of field emphasizing the reflective surface and glowing lanterns, rendered in a painterly, cinematic style with rich textures, muted earth tones accented by golden lanterns, evoking serenity and timeless charm. High-resolution, photorealistic with artistic brushstroke finish.",
+        "status": "generated"
+      }
+    },
+    "mode_B": {
+      "mode": "B (Hard Prompting)",
+      "enriched_prompt": "A tranquil rain-washed alleyway in ancient Jiangnan, where moss-glimmering cobblestones reflect the soft glow of hanging paper lanterns, their light diffused by mist and morning dew. Rendered in a Ghibli-inspired hand-drawn animation style: delicate ink linework weaves through soft watercolor washes, evoking a dreamlike nostalgia. The palette is a gentle pastel harmony—pale mint greens, peachy ambers, and lavender-gray skies—with warm, golden undertones from diffused sunlight filtering through misty clouds. Atmospheric shadows are soft and ethereal, enhancing the pastoral serenity of the scene. A lone wooden cart, half-hidden by bamboo, rests beside a mossy gate, while distant pagoda roofs fade into hazy horizons. Hand-painted matte painting quality, with subtle texture and layered brushstrokes, immerses the viewer in a Miyazaki-esque healing ambiance—calm, soul-soothing, and deeply peaceful. Balanced composition, centered on the lantern’s glow, invites quiet contemplation.",
+      "prompt_words": 134,
+      "hard_style_used": "Ghibli-inspired hand-drawn animation aesthetic: soft watercolor textures and delicate ink linework, fresh pastel color palette with gentle warm undertones, diffused natural sunlight with soft atmospheric shadows, pastoral idyllic scenery with serene tranquility, hand-painted matte painting quality with dreamy nostalgic mood, harmonious balanced composition, Miyazaki healing ambiance — calm, warm, and soul-soothing.",
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/rainy_old_street/rainy_old_street_mode_B.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/rainy_old_street/rainy_old_street_mode_B.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/28/20260611/51613171/860b6181-1775-4230-93a9-efe54b591713.png?Expires=1781789899&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=wqRbKgIi%2FnO0KIoWD0%2BRsZ1pGlY%3D",
+        "prompt_used": "A tranquil rain-washed alleyway in ancient Jiangnan, where moss-glimmering cobblestones reflect the soft glow of hanging paper lanterns, their light diffused by mist and morning dew. Rendered in a Ghibli-inspired hand-drawn animation style: delicate ink linework weaves through soft watercolor washes, evoking a dreamlike nostalgia. The palette is a gentle pastel harmony—pale mint greens, peachy ambers, and lavender-gray skies—with warm, golden undertones from diffused sunlight filtering through misty clouds. Atmospheric shadows are soft and ethereal, enhancing the pastoral serenity of the scene. A lone wooden cart, half-hidden by bamboo, rests beside a mossy gate, while distant pagoda roofs fade into hazy horizons. Hand-painted matte painting quality, with subtle texture and layered brushstrokes, immerses the viewer in a Miyazaki-esque healing ambiance—calm, soul-soothing, and deeply peaceful. Balanced composition, centered on the lantern’s glow, invites quiet contemplation.",
+        "status": "generated"
+      }
+    },
+    "mode_C": {
+      "mode": "C (Ours: Preference Alignment)",
+      "enriched_prompt": "A serene, hand-drawn watercolor illustration of a rainy afternoon in a traditional Jiangnan old street, with mossy, wet cobblestone pathways reflecting the soft, flickering glow of hanging lanterns. Golden hour backlight filters through misty raindrops, casting warm amber and soft peach hues across the scene, while gentle lens flares dance in the air. The composition centers on a narrow alleyway flanked by weathered wooden doors and tiled eaves, with a lone figure in a silk robe walking slowly, their silhouette blurred by the dreamy, romantic haze. Soft diffused natural window light mimics the lingering glow of sunset, enhancing the airy, nostalgic atmosphere. Rendered in photorealistic 8K detail with hyper-detailed textures—cracked stone, dewy leaves, glistening lanterns—featuring artistic brushstrokes and layered watercolor washes that evoke both painterly elegance and lifelike realism. Mood: tranquil, poetic, nostalgic, and warmly romantic.",
+      "prompt_words": 136,
+      "style_text": "The user's aesthetic preferences lean toward: golden hour backlight, lens flare, dreamy romantic haze; with influences of warm golden amber tones, sunset hues, rich earthy browns; and elements of soft diffused natural window light, gentle morning glow, airy atmosphere. Overall vibe: hand-drawn illustration, watercolor textures, artistic brushstrokes, photorealistic 8K rendering, hyper-detailed, lifelike textures.",
+      "num_ref_images": 1,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/rainy_old_street/rainy_old_street_mode_C.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/rainy_old_street/rainy_old_street_mode_C.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/5e/20260611/51613171/ce628625-737b-4705-85ed-44c604a90e82.png?Expires=1781789946&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=NQ41TsuX0vZwBl%2BuPj4lEhmbM5E%3D",
+        "prompt_used": "A serene, hand-drawn watercolor illustration of a rainy afternoon in a traditional Jiangnan old street, with mossy, wet cobblestone pathways reflecting the soft, flickering glow of hanging lanterns. Golden hour backlight filters through misty raindrops, casting warm amber and soft peach hues across the scene, while gentle lens flares dance in the air. The composition centers on a narrow alleyway flanked by weathered wooden doors and tiled eaves, with a lone figure in a silk robe walking slowly, their silhouette blurred by the dreamy, romantic haze. Soft diffused natural window light mimics the lingering glow of sunset, enhancing the airy, nostalgic atmosphere. Rendered in photorealistic 8K detail with hyper-detailed textures—cracked stone, dewy leaves, glistening lanterns—featuring artistic brushstrokes and layered watercolor washes that evoke both painterly elegance and lifelike realism. Mood: tranquil, poetic, nostalgic, and warmly romantic.",
+        "status": "generated"
+      }
+    }
+  },
+  "snow_mountain_cabin": {
+    "id": "snow_mountain_cabin",
+    "short_prompt": "雪山脚下的小木屋，炊烟袅袅升起",
+    "ref_images": [
+      "/home/coder/project/data/mllm/cankao.png"
+    ],
+    "hard_style": "Ghibli-inspired hand-drawn animation aesthetic: soft watercolor textures and delicate ink linework, fresh pastel color palette with gentle warm undertones, diffused natural sunlight with soft atmospheric shadows, pastoral idyllic scenery with serene tranquility, hand-painted matte painting quality with dreamy nostalgic mood, harmonious balanced composition, Miyazaki healing ambiance — calm, warm, and soul-soothing.",
+    "description": "Small cabin at the foot of a snow mountain with chimney smoke rising",
+    "mode_A": {
+      "mode": "A (Zero-shot Baseline)",
+      "enriched_prompt": "A cozy wooden cabin nestled at the base of a snow-capped mountain, with soft, warm smoke curling gently upward from its chimney, set against a serene winter landscape under golden hour light, rendered in a painterly, rustic style with soft focus and subtle depth of field, evoking a peaceful, nostalgic atmosphere.",
+      "prompt_words": 51,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/snow_mountain_cabin/snow_mountain_cabin_mode_A.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/snow_mountain_cabin/snow_mountain_cabin_mode_A.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/d4/20260611/51613171/742815a4-7dae-416d-ad29-f7b1fdd28801.png?Expires=1781789981&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=xkZ7q5DV0jqP5YAs2Rxw3GDzwSc%3D",
+        "prompt_used": "A cozy wooden cabin nestled at the base of a snow-capped mountain, with soft, warm smoke curling gently upward from its chimney, set against a serene winter landscape under golden hour light, rendered in a painterly, rustic style with soft focus and subtle depth of field, evoking a peaceful, nostalgic atmosphere.",
+        "status": "generated"
+      }
+    },
+    "mode_B": {
+      "mode": "B (Hard Prompting)",
+      "enriched_prompt": "A cozy, rustic wooden cabin nestled at the foot of a snow-capped mountain range, its warm, glowing windows casting a gentle radiance against the crisp white landscape. Delicate plumes of炊烟 rise lazily from the chimney, curling upward into the soft, diffused morning light that filters through the misty air. The scene is rendered in a Ghibli-inspired hand-drawn animation style: soft watercolor textures blend seamlessly with fine, expressive ink linework, evoking the tactile warmth of hand-painted matte paintings. A fresh pastel color palette dominates — gentle blushes of peach, lavender, and pale sage — infused with subtle warm undertones that radiate comfort and nostalgia. Diffused natural sunlight bathes the scene in a golden haze, casting soft, atmospheric shadows that deepen the sense of tranquility. The composition is harmonious and balanced, with the cabin centered as a quiet anchor in a vast, serene pastoral world — trees dusted with snow, distant peaks fading into mist, and a still, reflective lake mirroring the sky. The mood is dreamy, healing, and soul-soothing, echoing Miyazaki’s timeless embrace of nature’s quiet magic — calm, warm, and deeply restorative.",
+      "prompt_words": 182,
+      "hard_style_used": "Ghibli-inspired hand-drawn animation aesthetic: soft watercolor textures and delicate ink linework, fresh pastel color palette with gentle warm undertones, diffused natural sunlight with soft atmospheric shadows, pastoral idyllic scenery with serene tranquility, hand-painted matte painting quality with dreamy nostalgic mood, harmonious balanced composition, Miyazaki healing ambiance — calm, warm, and soul-soothing.",
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/snow_mountain_cabin/snow_mountain_cabin_mode_B.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/snow_mountain_cabin/snow_mountain_cabin_mode_B.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/ad/20260611/51613171/0d8af72b-81a2-4bc4-b666-d24239baf1cf.png?Expires=1781790026&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=mDstwVhOcH0HkRMLScFlVnN9C5c%3D",
+        "prompt_used": "A cozy, rustic wooden cabin nestled at the foot of a snow-capped mountain range, its warm, glowing windows casting a gentle radiance against the crisp white landscape. Delicate plumes of炊烟 rise lazily from the chimney, curling upward into the soft, diffused morning light that filters through the misty air. The scene is rendered in a Ghibli-inspired hand-drawn animation style: soft watercolor textures blend seamlessly with fine, expressive ink linework, evoking the tactile warmth of hand-painted matte paintings. A fresh pastel color palette dominates — gentle blushes of peach, lavender, and pale sage — infused with subtle warm undertones that radiate comfort and nostalgia. Diffused natural sunlight bathes the scene in a golden haze, casting soft, atmospheric shadows that deepen the sense of tranquility. The composition is harmonious and balanced, with the cabin centered as a quiet anchor in a vast, serene pastoral world — trees dusted with snow, distant peaks fading into mist, and a still, reflective lake mirroring the sky. The mood is dreamy, healing, and soul-soothing, echoing Miyazaki’s timeless embrace of nature’s quiet magic — calm, warm, and deeply restorative.",
+        "status": "generated"
+      }
+    },
+    "mode_C": {
+      "mode": "C (Ours: Preference Alignment)",
+      "enriched_prompt": "A cozy wooden cabin nestled at the foot of a snow-capped mountain, gentle plumes of warm炊烟 rising into the crisp, golden-hour sky, bathed in soft backlight from a setting sun casting amber and rose-gold hues across the scene; lens flare glows softly through the mist, blending dreamy romantic haze with crisp winter air; rich earthy browns of the cabin contrast with pristine white snow and deep blues of distant peaks; hand-drawn illustration style with watercolor textures, photorealistic 8K rendering, hyper-detailed wood grain, snowflakes, and smoke wisps; warm, diffused natural window light illuminates the cabin’s interior, hinting at a warm hearth inside; airy, tranquil mood evoking quiet solitude and peaceful winter magic, artistic brushstrokes adding depth and texture, rendered with cinematic realism and emotional warmth.",
+      "prompt_words": 124,
+      "style_text": "The user's aesthetic preferences lean toward: golden hour backlight, lens flare, dreamy romantic haze; with influences of warm golden amber tones, sunset hues, rich earthy browns; and elements of soft diffused natural window light, gentle morning glow, airy atmosphere. Overall vibe: hand-drawn illustration, watercolor textures, artistic brushstrokes, photorealistic 8K rendering, hyper-detailed, lifelike textures.",
+      "num_ref_images": 1,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/snow_mountain_cabin/snow_mountain_cabin_mode_C.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/snow_mountain_cabin/snow_mountain_cabin_mode_C.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/86/20260611/51613171/a2dd86d3-b05a-4792-b738-ff7961ae1d63.png?Expires=1781790073&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=hqud6aIjCzg6tZffVWuKf7NNOFY%3D",
+        "prompt_used": "A cozy wooden cabin nestled at the foot of a snow-capped mountain, gentle plumes of warm炊烟 rising into the crisp, golden-hour sky, bathed in soft backlight from a setting sun casting amber and rose-gold hues across the scene; lens flare glows softly through the mist, blending dreamy romantic haze with crisp winter air; rich earthy browns of the cabin contrast with pristine white snow and deep blues of distant peaks; hand-drawn illustration style with watercolor textures, photorealistic 8K rendering, hyper-detailed wood grain, snowflakes, and smoke wisps; warm, diffused natural window light illuminates the cabin’s interior, hinting at a warm hearth inside; airy, tranquil mood evoking quiet solitude and peaceful winter magic, artistic brushstrokes adding depth and texture, rendered with cinematic realism and emotional warmth.",
+        "status": "generated"
+      }
+    }
+  },
+  "cherry_blossom_girl": {
+    "id": "cherry_blossom_girl",
+    "short_prompt": "樱花树下的少女，花瓣随风飘落",
+    "ref_images": [
+      "/home/coder/project/data/mllm/cankao.png"
+    ],
+    "hard_style": "Ghibli-inspired hand-drawn animation aesthetic: soft watercolor textures and delicate ink linework, fresh pastel color palette with gentle warm undertones, diffused natural sunlight with soft atmospheric shadows, pastoral idyllic scenery with serene tranquility, hand-painted matte painting quality with dreamy nostalgic mood, harmonious balanced composition, Miyazaki healing ambiance — calm, warm, and soul-soothing.",
+    "description": "A girl under a cherry blossom tree with petals drifting in the breeze",
+    "mode_A": {
+      "mode": "A (Zero-shot Baseline)",
+      "enriched_prompt": "A young girl standing gracefully beneath a blossoming cherry blossom tree, delicate pink petals drifting gently through the air as they fall like a soft rain around her. Soft, diffused daylight filters through the branches, casting dappled shadows on her bare feet and the mossy ground. She wears a light, flowing kimono in pastel hues, her hair loose and catching the breeze. The background is a serene blend of blurred blossoms and distant greenery, evoking a tranquil, poetic spring afternoon. The image is rendered in a painterly, anime-inspired style with soft focus and dreamy lighting, capturing a moment of quiet beauty and gentle movement. High-resolution, 8K, cinematic composition, warm color palette dominated by pinks, whites, and soft greens, with a tranquil, nostalgic mood.",
+      "prompt_words": 123,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/cherry_blossom_girl/cherry_blossom_girl_mode_A.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/cherry_blossom_girl/cherry_blossom_girl_mode_A.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/37/20260611/51613171/1990faa6-6f48-49f0-b5fd-8e1eb81e58da.png?Expires=1781790113&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=pkFGgdtKaLNW2fN8sXrWxp2bMWU%3D",
+        "prompt_used": "A young girl standing gracefully beneath a blossoming cherry blossom tree, delicate pink petals drifting gently through the air as they fall like a soft rain around her. Soft, diffused daylight filters through the branches, casting dappled shadows on her bare feet and the mossy ground. She wears a light, flowing kimono in pastel hues, her hair loose and catching the breeze. The background is a serene blend of blurred blossoms and distant greenery, evoking a tranquil, poetic spring afternoon. The image is rendered in a painterly, anime-inspired style with soft focus and dreamy lighting, capturing a moment of quiet beauty and gentle movement. High-resolution, 8K, cinematic composition, warm color palette dominated by pinks, whites, and soft greens, with a tranquil, nostalgic mood.",
+        "status": "generated"
+      }
+    },
+    "mode_B": {
+      "mode": "B (Hard Prompting)",
+      "enriched_prompt": "A serene, Ghibli-inspired hand-drawn animation scene featuring a young girl standing beneath a blossoming cherry blossom tree, petals gently drifting down around her like a soft, floating snowfall. The composition is harmoniously balanced, with the girl positioned slightly off-center, her silhouette framed by the arching branches and cascading blossoms. Soft, diffused sunlight filters through the canopy, casting warm, golden glows and delicate atmospheric shadows that dance across her dress and the mossy ground. The color palette is a dreamy pastel harmony — blush pinks, pale lavenders, buttery yellows, and muted greens — infused with gentle warm undertones that evoke nostalgia and tranquility. Rendered in soft watercolor textures with fine ink linework, the image carries the hand-painted matte painting quality of Miyazaki’s masterful landscapes, evoking a soul-soothing, healing ambiance. The background reveals a quiet pastoral village nestled in gentle hills, with distant rooftops and whispering trees, all bathed in the hushed calm of a spring afternoon. The mood is profoundly peaceful, intimate, and emotionally resonant — a moment suspended in time, where nature and innocence intertwine in a tender, timeless embrace.",
+      "prompt_words": 180,
+      "hard_style_used": "Ghibli-inspired hand-drawn animation aesthetic: soft watercolor textures and delicate ink linework, fresh pastel color palette with gentle warm undertones, diffused natural sunlight with soft atmospheric shadows, pastoral idyllic scenery with serene tranquility, hand-painted matte painting quality with dreamy nostalgic mood, harmonious balanced composition, Miyazaki healing ambiance — calm, warm, and soul-soothing.",
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/cherry_blossom_girl/cherry_blossom_girl_mode_B.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/cherry_blossom_girl/cherry_blossom_girl_mode_B.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/08/20260611/51613171/ec6b2645-9d62-44bb-a55d-4863c5bf5d8d.png?Expires=1781790160&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=3ZjZ%2BeLih5OfZEcN7Hqaf9QQUak%3D",
+        "prompt_used": "A serene, Ghibli-inspired hand-drawn animation scene featuring a young girl standing beneath a blossoming cherry blossom tree, petals gently drifting down around her like a soft, floating snowfall. The composition is harmoniously balanced, with the girl positioned slightly off-center, her silhouette framed by the arching branches and cascading blossoms. Soft, diffused sunlight filters through the canopy, casting warm, golden glows and delicate atmospheric shadows that dance across her dress and the mossy ground. The color palette is a dreamy pastel harmony — blush pinks, pale lavenders, buttery yellows, and muted greens — infused with gentle warm undertones that evoke nostalgia and tranquility. Rendered in soft watercolor textures with fine ink linework, the image carries the hand-painted matte painting quality of Miyazaki’s masterful landscapes, evoking a soul-soothing, healing ambiance. The background reveals a quiet pastoral village nestled in gentle hills, with distant rooftops and whispering trees, all bathed in the hushed calm of a spring afternoon. The mood is profoundly peaceful, intimate, and emotionally resonant — a moment suspended in time, where nature and innocence intertwine in a tender, timeless embrace.",
+        "status": "generated"
+      }
+    },
+    "mode_C": {
+      "mode": "C (Ours: Preference Alignment)",
+      "enriched_prompt": "A graceful少女 stands beneath a sprawling cherry blossom tree in full bloom, soft pink petals gently drifting down like snowflakes in a slow, dreamy cascade; golden hour backlight bathes the scene in warm amber and honey-gold hues, with delicate lens flares shimmering through the branches; the air is filled with a romantic, ethereal haze, as if suspended in a soft morning glow filtering through diffused natural light from a nearby window; watercolor-inspired brushstrokes blend seamlessly with photorealistic 8K hyper-detailed rendering, capturing every petal’s texture, the girl’s flowing hair catching the light, and the earthy brown bark of the tree against the pastel sky; composition centers on the少女 with a shallow depth of field, foreground petals blurred softly, background trees fading into warm sunset tones; mood: tranquil, nostalgic, and deeply romantic — like a hand-drawn illustration brought to life with cinematic warmth and poetic stillness.",
+      "prompt_words": 144,
+      "style_text": "The user's aesthetic preferences lean toward: golden hour backlight, lens flare, dreamy romantic haze; with influences of warm golden amber tones, sunset hues, rich earthy browns; and elements of soft diffused natural window light, gentle morning glow, airy atmosphere. Overall vibe: hand-drawn illustration, watercolor textures, artistic brushstrokes, photorealistic 8K rendering, hyper-detailed, lifelike textures.",
+      "num_ref_images": 1,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/cherry_blossom_girl/cherry_blossom_girl_mode_C.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/cherry_blossom_girl/cherry_blossom_girl_mode_C.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/3c/20260611/51613171/b69a53f4-c11c-4908-b0d2-97701d408e1f.png?Expires=1781790208&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=FJ2ARM98WpHWNYfO2h8Wk%2FBmNuQ%3D",
+        "prompt_used": "A graceful少女 stands beneath a sprawling cherry blossom tree in full bloom, soft pink petals gently drifting down like snowflakes in a slow, dreamy cascade; golden hour backlight bathes the scene in warm amber and honey-gold hues, with delicate lens flares shimmering through the branches; the air is filled with a romantic, ethereal haze, as if suspended in a soft morning glow filtering through diffused natural light from a nearby window; watercolor-inspired brushstrokes blend seamlessly with photorealistic 8K hyper-detailed rendering, capturing every petal’s texture, the girl’s flowing hair catching the light, and the earthy brown bark of the tree against the pastel sky; composition centers on the少女 with a shallow depth of field, foreground petals blurred softly, background trees fading into warm sunset tones; mood: tranquil, nostalgic, and deeply romantic — like a hand-drawn illustration brought to life with cinematic warmth and poetic stillness.",
+        "status": "generated"
+      }
+    }
+  },
+  "train_wheat_field": {
+    "id": "train_wheat_field",
+    "short_prompt": "一列老式火车穿行在金黄色的麦田中",
+    "ref_images": [
+      "/home/coder/project/data/mllm/cankao.png"
+    ],
+    "hard_style": "Ghibli-inspired hand-drawn animation aesthetic: soft watercolor textures and delicate ink linework, fresh pastel color palette with gentle warm undertones, diffused natural sunlight with soft atmospheric shadows, pastoral idyllic scenery with serene tranquility, hand-painted matte painting quality with dreamy nostalgic mood, harmonious balanced composition, Miyazaki healing ambiance — calm, warm, and soul-soothing.",
+    "description": "A vintage train traveling through golden wheat fields",
+    "mode_A": {
+      "mode": "A (Zero-shot Baseline)",
+      "enriched_prompt": "A vintage steam locomotive chugs through a vast field of golden wheat under a soft, golden hour sky, its smokestack emitting wisps of steam that curl into the warm air. The train’s weathered metal and wooden carriage contrast beautifully with the rippling, sunlit wheat stalks that sway gently in the breeze. The composition captures the train from a low-angle perspective, emphasizing its grandeur and motion, with shallow depth of field blurring the foreground and background to draw focus to the locomotive’s details. Warm amber and ochre tones dominate the palette, enhanced by soft natural lighting that casts long, gentle shadows. The scene evokes a nostalgic, serene, and slightly cinematic mood, rendered in high-resolution photorealistic style with cinematic depth and fine texture detail, as if captured by a professional camera lens.",
+      "prompt_words": 130,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/train_wheat_field/train_wheat_field_mode_A.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/train_wheat_field/train_wheat_field_mode_A.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/96/20260611/51613171/be43596d-e1b2-4da5-b089-9fa869b96b82.png?Expires=1781790248&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=tes7oaxuLKtLN9SCyKAkmH5b2rA%3D",
+        "prompt_used": "A vintage steam locomotive chugs through a vast field of golden wheat under a soft, golden hour sky, its smokestack emitting wisps of steam that curl into the warm air. The train’s weathered metal and wooden carriage contrast beautifully with the rippling, sunlit wheat stalks that sway gently in the breeze. The composition captures the train from a low-angle perspective, emphasizing its grandeur and motion, with shallow depth of field blurring the foreground and background to draw focus to the locomotive’s details. Warm amber and ochre tones dominate the palette, enhanced by soft natural lighting that casts long, gentle shadows. The scene evokes a nostalgic, serene, and slightly cinematic mood, rendered in high-resolution photorealistic style with cinematic depth and fine texture detail, as if captured by a professional camera lens.",
+        "status": "generated"
+      }
+    },
+    "mode_B": {
+      "mode": "B (Hard Prompting)",
+      "enriched_prompt": "A vintage steam train gently glides through a sprawling golden wheat field under a soft, diffused golden hour sky, rendered in a Ghibli-inspired hand-drawn animation style: delicate ink linework intertwines with soft watercolor textures, bathed in a fresh pastel palette infused with gentle warm undertones — peach, amber, and blush hues shimmering across the scene. The sunlight filters through a hazy atmosphere, casting dreamy, elongated shadows that whisper tranquility, while the train’s metallic details gleam with nostalgic charm. The composition is harmoniously balanced, with the train centered as a quiet protagonist in a vast, pastoral landscape of swaying wheat stalks and distant rolling hills. Every brushstroke carries a hand-painted matte painting quality, evoking a soul-soothing, healing ambiance reminiscent of Miyazaki’s countryside — calm, tender, and utterly serene, as if time itself has paused to admire this gentle, timeless moment.",
+      "prompt_words": 139,
+      "hard_style_used": "Ghibli-inspired hand-drawn animation aesthetic: soft watercolor textures and delicate ink linework, fresh pastel color palette with gentle warm undertones, diffused natural sunlight with soft atmospheric shadows, pastoral idyllic scenery with serene tranquility, hand-painted matte painting quality with dreamy nostalgic mood, harmonious balanced composition, Miyazaki healing ambiance — calm, warm, and soul-soothing.",
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/train_wheat_field/train_wheat_field_mode_B.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/train_wheat_field/train_wheat_field_mode_B.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/a4/20260611/51613171/4563b262-dd45-40ec-b6d9-6422629e575b.png?Expires=1781790290&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=smAvQM0XFGO1g9gRXBJdBdY80x8%3D",
+        "prompt_used": "A vintage steam train gently glides through a sprawling golden wheat field under a soft, diffused golden hour sky, rendered in a Ghibli-inspired hand-drawn animation style: delicate ink linework intertwines with soft watercolor textures, bathed in a fresh pastel palette infused with gentle warm undertones — peach, amber, and blush hues shimmering across the scene. The sunlight filters through a hazy atmosphere, casting dreamy, elongated shadows that whisper tranquility, while the train’s metallic details gleam with nostalgic charm. The composition is harmoniously balanced, with the train centered as a quiet protagonist in a vast, pastoral landscape of swaying wheat stalks and distant rolling hills. Every brushstroke carries a hand-painted matte painting quality, evoking a soul-soothing, healing ambiance reminiscent of Miyazaki’s countryside — calm, tender, and utterly serene, as if time itself has paused to admire this gentle, timeless moment.",
+        "status": "generated"
+      }
+    },
+    "mode_C": {
+      "mode": "C (Ours: Preference Alignment)",
+      "enriched_prompt": "A vintage steam train缓缓穿行于无垠金黄麦田之间，夕阳西下，暖金色夕照从地平线倾泻而下，为麦浪镀上柔光，镜头后方晕染出梦幻般的镜头光斑与柔焦雾气。列车车头微微冒着白烟，车身斑驳复古，铁轨蜿蜒如诗，两侧麦穗随风轻摆，仿佛在低语。画面采用水彩手绘质感与8K超高清写实渲染结合，笔触细腻如油画，光影层次丰富，暖琥珀色、赭石棕与浅金黄交织，营造出温柔怀旧的浪漫氛围。构图采用对角线引导视线，前景麦穗虚化，中景列车清晰，远景渐入朦胧暮色，整体画面如电影胶片般温暖、诗意、沉浸式，充满电影级电影感与艺术性。",
+      "prompt_words": 4,
+      "style_text": "The user's aesthetic preferences lean toward: golden hour backlight, lens flare, dreamy romantic haze; with influences of warm golden amber tones, sunset hues, rich earthy browns; and elements of soft diffused natural window light, gentle morning glow, airy atmosphere. Overall vibe: hand-drawn illustration, watercolor textures, artistic brushstrokes, photorealistic 8K rendering, hyper-detailed, lifelike textures.",
+      "num_ref_images": 1,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/train_wheat_field/train_wheat_field_mode_C.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/train_wheat_field/train_wheat_field_mode_C.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/1e/20260611/51613171/4732110a-2476-4de1-b446-1bb9824a2f0a.png?Expires=1781790338&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=ERZ%2FXIGT%2BJzGM3%2BU89agWERrhrw%3D",
+        "prompt_used": "A vintage steam train缓缓穿行于无垠金黄麦田之间，夕阳西下，暖金色夕照从地平线倾泻而下，为麦浪镀上柔光，镜头后方晕染出梦幻般的镜头光斑与柔焦雾气。列车车头微微冒着白烟，车身斑驳复古，铁轨蜿蜒如诗，两侧麦穗随风轻摆，仿佛在低语。画面采用水彩手绘质感与8K超高清写实渲染结合，笔触细腻如油画，光影层次丰富，暖琥珀色、赭石棕与浅金黄交织，营造出温柔怀旧的浪漫氛围。构图采用对角线引导视线，前景麦穗虚化，中景列车清晰，远景渐入朦胧暮色，整体画面如电影胶片般温暖、诗意、沉浸式，充满电影级电影感与艺术性。",
+        "status": "generated"
+      }
+    }
+  },
+  "library_window": {
+    "id": "library_window",
+    "short_prompt": "图书馆靠窗的书桌，午后阳光斜照在翻开的书上",
+    "ref_images": [
+      "/home/coder/project/data/mllm/cankao.png"
+    ],
+    "hard_style": "Ghibli-inspired hand-drawn animation aesthetic: soft watercolor textures and delicate ink linework, fresh pastel color palette with gentle warm undertones, diffused natural sunlight with soft atmospheric shadows, pastoral idyllic scenery with serene tranquility, hand-painted matte painting quality with dreamy nostalgic mood, harmonious balanced composition, Miyazaki healing ambiance — calm, warm, and soul-soothing.",
+    "description": "Library desk by a window with afternoon sunlight on an open book",
+    "mode_A": {
+      "mode": "A (Zero-shot Baseline)",
+      "enriched_prompt": "A cozy library corner featuring a wooden desk by a large window, with soft, golden afternoon sunlight streaming diagonally across the frame, illuminating an open book resting on the desk. The pages are slightly curled, catching the light, and the scene is bathed in warm, serene tones with gentle shadows cast by the window frame. A few scattered books and a steaming cup of tea sit nearby, adding to the tranquil, studious atmosphere. Rendered in a realistic, high-resolution style with cinematic lighting and fine texture details, evoking quiet focus and peaceful solitude.",
+      "prompt_words": 92,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/library_window/library_window_mode_A.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/library_window/library_window_mode_A.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/8f/20260611/51613171/f94e55b5-fa8d-4aa5-b0c9-6824cfdebc1b.png?Expires=1781790374&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=Pn5ezBlokf8S72Jp2%2FALxDuKzmw%3D",
+        "prompt_used": "A cozy library corner featuring a wooden desk by a large window, with soft, golden afternoon sunlight streaming diagonally across the frame, illuminating an open book resting on the desk. The pages are slightly curled, catching the light, and the scene is bathed in warm, serene tones with gentle shadows cast by the window frame. A few scattered books and a steaming cup of tea sit nearby, adding to the tranquil, studious atmosphere. Rendered in a realistic, high-resolution style with cinematic lighting and fine texture details, evoking quiet focus and peaceful solitude.",
+        "status": "generated"
+      }
+    },
+    "mode_B": {
+      "mode": "B (Hard Prompting)",
+      "enriched_prompt": "A serene Ghibli-inspired hand-drawn animation scene: a cozy library corner with a wooden desk by a tall window, bathed in golden afternoon sunlight slanting diagonally across the frame, softly illuminating an open book resting on the desk — pages gently curled, as if paused mid-reading. Delicate ink linework outlines the desk, shelves lined with gently stacked books, and a small potted plant on the windowsill. The sunlight diffuses through the glass, casting soft, warm, atmospheric shadows that ripple across the floor and book spines. Pastel color palette dominates — soft peach, mint, lavender, and cream tones with gentle warm undertones, evoking nostalgia and quiet peace. The background hints at a pastoral library garden or distant trees visible through the window, rendered in dreamy, painterly strokes. Composition is harmoniously balanced, centered on the open book and the window’s light, with subtle depth and texture reminiscent of hand-painted matte paintings. The mood is profoundly calming, soul-soothing, and healing — echoing Miyazaki’s signature tranquil magic, where time slows and the world feels tenderly cared for.",
+      "prompt_words": 172,
+      "hard_style_used": "Ghibli-inspired hand-drawn animation aesthetic: soft watercolor textures and delicate ink linework, fresh pastel color palette with gentle warm undertones, diffused natural sunlight with soft atmospheric shadows, pastoral idyllic scenery with serene tranquility, hand-painted matte painting quality with dreamy nostalgic mood, harmonious balanced composition, Miyazaki healing ambiance — calm, warm, and soul-soothing.",
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/library_window/library_window_mode_B.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/library_window/library_window_mode_B.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/3e/20260611/51613171/18cac178-c778-4014-8754-fb1623f767a4.png?Expires=1781790415&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=12qTYv2ERwTWGP4PNaUEKv2%2FjN4%3D",
+        "prompt_used": "A serene Ghibli-inspired hand-drawn animation scene: a cozy library corner with a wooden desk by a tall window, bathed in golden afternoon sunlight slanting diagonally across the frame, softly illuminating an open book resting on the desk — pages gently curled, as if paused mid-reading. Delicate ink linework outlines the desk, shelves lined with gently stacked books, and a small potted plant on the windowsill. The sunlight diffuses through the glass, casting soft, warm, atmospheric shadows that ripple across the floor and book spines. Pastel color palette dominates — soft peach, mint, lavender, and cream tones with gentle warm undertones, evoking nostalgia and quiet peace. The background hints at a pastoral library garden or distant trees visible through the window, rendered in dreamy, painterly strokes. Composition is harmoniously balanced, centered on the open book and the window’s light, with subtle depth and texture reminiscent of hand-painted matte paintings. The mood is profoundly calming, soul-soothing, and healing — echoing Miyazaki’s signature tranquil magic, where time slows and the world feels tenderly cared for.",
+        "status": "generated"
+      }
+    },
+    "mode_C": {
+      "mode": "C (Ours: Preference Alignment)",
+      "enriched_prompt": "A cozy, hand-drawn illustration of a quiet library corner, featuring a wooden desk nestled beside a large window, bathed in warm, golden-hour sunlight streaming diagonally across the scene. A single open book rests on the desk, its pages gently illuminated by the soft, diffused afternoon light, casting delicate shadows and subtle lens flares that dance across the page. The atmosphere is dreamy and romantic, with a hazy, airy glow that suggests a peaceful, contemplative moment. Rich earthy browns and amber tones dominate the palette, accented by the soft blush of sunset hues in the window’s reflection. Rendered in photorealistic 8K style with watercolor textures and artistic brushstrokes, every detail—from the texture of the book’s spine to the grain of the wood—is hyper-detailed and lifelike. The mood is serene, nostalgic, and inviting, evoking the quiet magic of reading under a golden sky.",
+      "prompt_words": 141,
+      "style_text": "The user's aesthetic preferences lean toward: golden hour backlight, lens flare, dreamy romantic haze; with influences of warm golden amber tones, sunset hues, rich earthy browns; and elements of soft diffused natural window light, gentle morning glow, airy atmosphere. Overall vibe: hand-drawn illustration, watercolor textures, artistic brushstrokes, photorealistic 8K rendering, hyper-detailed, lifelike textures.",
+      "num_ref_images": 1,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/library_window/library_window_mode_C.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/library_window/library_window_mode_C.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/48/20260611/51613171/ef1991f9-68e7-44b1-8899-049b36605294.png?Expires=1781790458&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=qT9N1nV8owv1EIkF%2FhQSeA9b%2Blk%3D",
+        "prompt_used": "A cozy, hand-drawn illustration of a quiet library corner, featuring a wooden desk nestled beside a large window, bathed in warm, golden-hour sunlight streaming diagonally across the scene. A single open book rests on the desk, its pages gently illuminated by the soft, diffused afternoon light, casting delicate shadows and subtle lens flares that dance across the page. The atmosphere is dreamy and romantic, with a hazy, airy glow that suggests a peaceful, contemplative moment. Rich earthy browns and amber tones dominate the palette, accented by the soft blush of sunset hues in the window’s reflection. Rendered in photorealistic 8K style with watercolor textures and artistic brushstrokes, every detail—from the texture of the book’s spine to the grain of the wood—is hyper-detailed and lifelike. The mood is serene, nostalgic, and inviting, evoking the quiet magic of reading under a golden sky.",
+        "status": "generated"
+      }
+    }
+  },
+  "autumn_maple_stream": {
+    "id": "autumn_maple_stream",
+    "short_prompt": "秋天的枫叶林，一条清澈的小溪蜿蜒流过",
+    "ref_images": [
+      "/home/coder/project/data/mllm/cankao.png"
+    ],
+    "hard_style": "Ghibli-inspired hand-drawn animation aesthetic: soft watercolor textures and delicate ink linework, fresh pastel color palette with gentle warm undertones, diffused natural sunlight with soft atmospheric shadows, pastoral idyllic scenery with serene tranquility, hand-painted matte painting quality with dreamy nostalgic mood, harmonious balanced composition, Miyazaki healing ambiance — calm, warm, and soul-soothing.",
+    "description": "Autumn maple forest with a clear stream winding through",
+    "mode_A": {
+      "mode": "A (Zero-shot Baseline)",
+      "enriched_prompt": "A serene autumn maple forest with vibrant crimson and gold leaves cascading down the trees, a clear, gently flowing stream meandering through the center, reflecting the sky and foliage; soft golden hour sunlight filters through the canopy, casting warm, dappled light on mossy rocks and fallen leaves; shallow water reveals smooth stones and aquatic plants; rich earthy tones contrast with bright autumn hues; composition leads the eye along the winding stream; cinematic depth of field, high-resolution rendering, photorealistic style with painterly texture, tranquil and inviting atmosphere, 8K ultra-detailed, natural lighting, crisp focus on foreground leaves and water ripples.",
+      "prompt_words": 98,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/autumn_maple_stream/autumn_maple_stream_mode_A.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/autumn_maple_stream/autumn_maple_stream_mode_A.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/e8/20260611/51613171/d101d8c9-49bc-46ba-9054-68cec967a9ac.png?Expires=1781790504&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=aPBSpfih2km0vdjfRx0rGpdTqR8%3D",
+        "prompt_used": "A serene autumn maple forest with vibrant crimson and gold leaves cascading down the trees, a clear, gently flowing stream meandering through the center, reflecting the sky and foliage; soft golden hour sunlight filters through the canopy, casting warm, dappled light on mossy rocks and fallen leaves; shallow water reveals smooth stones and aquatic plants; rich earthy tones contrast with bright autumn hues; composition leads the eye along the winding stream; cinematic depth of field, high-resolution rendering, photorealistic style with painterly texture, tranquil and inviting atmosphere, 8K ultra-detailed, natural lighting, crisp focus on foreground leaves and water ripples.",
+        "status": "generated"
+      }
+    },
+    "mode_B": {
+      "mode": "B (Hard Prompting)",
+      "enriched_prompt": "A serene autumnal maple forest bathed in diffused golden sunlight, with a clear, gently flowing stream winding through the center, reflecting the soft hues of falling leaves. The scene is rendered in a Ghibli-inspired hand-drawn animation style: delicate ink linework overlays soft watercolor textures, blending pastel pinks, burnt oranges, and muted golds with gentle warm undertones. Light filters through the canopy, casting dreamy, atmospheric shadows that enhance depth without harsh contrast. The composition is harmoniously balanced — tall maple trees frame the stream, their branches heavy with crimson and amber leaves, while mossy stones and fallen leaves line the water’s edge. The overall mood is pastoral, idyllic, and deeply tranquil, evoking a Miyazaki healing ambiance — calm, warm, and soul-soothing. Hand-painted matte painting quality with a nostalgic, dreamlike quality, as if captured from a forgotten memory in a quiet countryside.",
+      "prompt_words": 140,
+      "hard_style_used": "Ghibli-inspired hand-drawn animation aesthetic: soft watercolor textures and delicate ink linework, fresh pastel color palette with gentle warm undertones, diffused natural sunlight with soft atmospheric shadows, pastoral idyllic scenery with serene tranquility, hand-painted matte painting quality with dreamy nostalgic mood, harmonious balanced composition, Miyazaki healing ambiance — calm, warm, and soul-soothing.",
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/autumn_maple_stream/autumn_maple_stream_mode_B.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/autumn_maple_stream/autumn_maple_stream_mode_B.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/ed/20260611/51613171/31574afe-decf-4a4b-8fbc-3b2d077c68df.png?Expires=1781790543&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=hpK%2B%2BQZ8WrEXGlG%2FEV0Lf4ODhug%3D",
+        "prompt_used": "A serene autumnal maple forest bathed in diffused golden sunlight, with a clear, gently flowing stream winding through the center, reflecting the soft hues of falling leaves. The scene is rendered in a Ghibli-inspired hand-drawn animation style: delicate ink linework overlays soft watercolor textures, blending pastel pinks, burnt oranges, and muted golds with gentle warm undertones. Light filters through the canopy, casting dreamy, atmospheric shadows that enhance depth without harsh contrast. The composition is harmoniously balanced — tall maple trees frame the stream, their branches heavy with crimson and amber leaves, while mossy stones and fallen leaves line the water’s edge. The overall mood is pastoral, idyllic, and deeply tranquil, evoking a Miyazaki healing ambiance — calm, warm, and soul-soothing. Hand-painted matte painting quality with a nostalgic, dreamlike quality, as if captured from a forgotten memory in a quiet countryside.",
+        "status": "generated"
+      }
+    },
+    "mode_C": {
+      "mode": "C (Ours: Preference Alignment)",
+      "enriched_prompt": "A serene autumn maple forest with a clear, gently flowing stream winding through the center, bathed in golden hour backlight with soft lens flare and dreamy romantic haze; rich earthy browns and warm amber hues dominate the palette, accented by vibrant crimson, burnt orange, and deep burgundy maple leaves floating lightly above the water; soft diffused natural window light filters through the canopy, creating an airy, ethereal atmosphere; rendered in hyper-detailed photorealistic 8K style with watercolor textures and hand-drawn artistic brushstrokes, emphasizing lifelike textures of wet leaves, mossy stones, and rippling water; mood: tranquil, nostalgic, and deeply romantic; composition: wide-angle landscape shot, shallow depth of field, with the stream leading the eye into the distance, surrounded by towering trees with sparse, glowing autumn foliage; subtle motion blur on water ripples and floating leaves to enhance the sense of gentle movement and timelessness.",
+      "prompt_words": 142,
+      "style_text": "The user's aesthetic preferences lean toward: golden hour backlight, lens flare, dreamy romantic haze; with influences of warm golden amber tones, sunset hues, rich earthy browns; and elements of soft diffused natural window light, gentle morning glow, airy atmosphere. Overall vibe: hand-drawn illustration, watercolor textures, artistic brushstrokes, photorealistic 8K rendering, hyper-detailed, lifelike textures.",
+      "num_ref_images": 1,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/autumn_maple_stream/autumn_maple_stream_mode_C.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/autumn_maple_stream/autumn_maple_stream_mode_C.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/f9/20260611/51613171/95ba1cab-128a-4bae-80eb-a9aee7cb96d4.png?Expires=1781790594&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=Ac%2B8EIgZYEIJ%2Fx1%2Ftiw8OWMA%2FVg%3D",
+        "prompt_used": "A serene autumn maple forest with a clear, gently flowing stream winding through the center, bathed in golden hour backlight with soft lens flare and dreamy romantic haze; rich earthy browns and warm amber hues dominate the palette, accented by vibrant crimson, burnt orange, and deep burgundy maple leaves floating lightly above the water; soft diffused natural window light filters through the canopy, creating an airy, ethereal atmosphere; rendered in hyper-detailed photorealistic 8K style with watercolor textures and hand-drawn artistic brushstrokes, emphasizing lifelike textures of wet leaves, mossy stones, and rippling water; mood: tranquil, nostalgic, and deeply romantic; composition: wide-angle landscape shot, shallow depth of field, with the stream leading the eye into the distance, surrounded by towering trees with sparse, glowing autumn foliage; subtle motion blur on water ripples and floating leaves to enhance the sense of gentle movement and timelessness.",
+        "status": "generated"
+      }
+    }
+  },
+  "japanese_garden_cat": {
+    "id": "japanese_garden_cat",
+    "short_prompt": "猫咪在日式庭院的水池边悠闲地喝水",
+    "ref_images": [
+      "/home/coder/project/data/mllm/cankao.png"
+    ],
+    "hard_style": "Ghibli-inspired hand-drawn animation aesthetic: soft watercolor textures and delicate ink linework, fresh pastel color palette with gentle warm undertones, diffused natural sunlight with soft atmospheric shadows, pastoral idyllic scenery with serene tranquility, hand-painted matte painting quality with dreamy nostalgic mood, harmonious balanced composition, Miyazaki healing ambiance — calm, warm, and soul-soothing.",
+    "description": "A cat leisurely drinking water by a pond in a Japanese garden",
+    "mode_A": {
+      "mode": "A (Zero-shot Baseline)",
+      "enriched_prompt": "A serene Japanese garden pond at dawn, with a fluffy domestic cat lounging gracefully by the water’s edge, its head lowered to sip gently from the still surface. Delicate cherry blossom petals float softly on the water, surrounded by mossy stone lanterns, bamboo fences, and a traditional wooden bridge in the background. Soft golden morning light filters through the trees, casting gentle shadows and illuminating the cat’s fur with warm, natural tones. The scene exudes tranquility and quiet elegance, rendered in photorealistic detail with a shallow depth of field, capturing the cat as the focal point while the garden blurs softly into the background. High-resolution, cinematic lighting, soft bokeh, and a peaceful, meditative mood.",
+      "prompt_words": 114,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/japanese_garden_cat/japanese_garden_cat_mode_A.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/japanese_garden_cat/japanese_garden_cat_mode_A.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/7d/20260611/51613171/2db0b4e8-6ee6-47cf-b990-c5375bf2c5e6.png?Expires=1781790633&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=Grqm7aV2socRdoYydjrxodj9Zpo%3D",
+        "prompt_used": "A serene Japanese garden pond at dawn, with a fluffy domestic cat lounging gracefully by the water’s edge, its head lowered to sip gently from the still surface. Delicate cherry blossom petals float softly on the water, surrounded by mossy stone lanterns, bamboo fences, and a traditional wooden bridge in the background. Soft golden morning light filters through the trees, casting gentle shadows and illuminating the cat’s fur with warm, natural tones. The scene exudes tranquility and quiet elegance, rendered in photorealistic detail with a shallow depth of field, capturing the cat as the focal point while the garden blurs softly into the background. High-resolution, cinematic lighting, soft bokeh, and a peaceful, meditative mood.",
+        "status": "generated"
+      }
+    },
+    "mode_B": {
+      "mode": "B (Hard Prompting)",
+      "enriched_prompt": "A serene Ghibli-inspired hand-drawn animation scene featuring a fluffy, soft-coated cat leisurely drinking from the edge of a tranquil Japanese garden pond, surrounded by mossy stones, slender bamboo stalks, and cherry blossoms gently drifting on the water’s surface. The composition is harmoniously balanced, with the cat centered in the foreground, its whiskers twitching as it sips from a shallow pool reflecting the sky. Diffused golden sunlight filters through the trees, casting soft, dreamy shadows across the moss and water, while the color palette glows with gentle pastels — pale lavender, mint green, warm peach, and buttery yellow — all infused with subtle warmth and nostalgia. Delicate ink linework outlines every leaf, petal, and fur strand, rendered in a hand-painted matte painting style reminiscent of Studio Ghibli’s signature dreamlike beauty. The atmosphere is deeply peaceful, soul-soothing, and pastoral, evoking the healing, quiet magic of Miyazaki’s world — where time slows, nature whispers, and every moment feels like a gentle embrace.",
+      "prompt_words": 159,
+      "hard_style_used": "Ghibli-inspired hand-drawn animation aesthetic: soft watercolor textures and delicate ink linework, fresh pastel color palette with gentle warm undertones, diffused natural sunlight with soft atmospheric shadows, pastoral idyllic scenery with serene tranquility, hand-painted matte painting quality with dreamy nostalgic mood, harmonious balanced composition, Miyazaki healing ambiance — calm, warm, and soul-soothing.",
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/japanese_garden_cat/japanese_garden_cat_mode_B.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/japanese_garden_cat/japanese_garden_cat_mode_B.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/87/20260611/51613171/1b0df3ce-2cde-4281-9e17-fc59013013fd.png?Expires=1781790676&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=jd5WCIqLNOU6J%2Buby%2FqC6emPk1Q%3D",
+        "prompt_used": "A serene Ghibli-inspired hand-drawn animation scene featuring a fluffy, soft-coated cat leisurely drinking from the edge of a tranquil Japanese garden pond, surrounded by mossy stones, slender bamboo stalks, and cherry blossoms gently drifting on the water’s surface. The composition is harmoniously balanced, with the cat centered in the foreground, its whiskers twitching as it sips from a shallow pool reflecting the sky. Diffused golden sunlight filters through the trees, casting soft, dreamy shadows across the moss and water, while the color palette glows with gentle pastels — pale lavender, mint green, warm peach, and buttery yellow — all infused with subtle warmth and nostalgia. Delicate ink linework outlines every leaf, petal, and fur strand, rendered in a hand-painted matte painting style reminiscent of Studio Ghibli’s signature dreamlike beauty. The atmosphere is deeply peaceful, soul-soothing, and pastoral, evoking the healing, quiet magic of Miyazaki’s world — where time slows, nature whispers, and every moment feels like a gentle embrace.",
+        "status": "generated"
+      }
+    },
+    "mode_C": {
+      "mode": "C (Ours: Preference Alignment)",
+      "enriched_prompt": "A serene, hand-drawn illustration in watercolor style, capturing a fluffy ginger cat lazily sipping water from a tranquil Japanese garden pond at golden hour — soft amber sunlight filters through cherry blossom branches above, casting warm, diffused glows and gentle lens flares across the scene. The cat’s fur catches the light with subtle brushstroke textures, while the pond reflects the sky’s soft gradient of peach, orange, and lavender hues. Surrounding the pool are mossy stones, delicate bamboo stalks, and a moss-covered wooden bridge in the background, all rendered with hyper-detailed, lifelike textures. The atmosphere is dreamy and romantic, with a hazy, airy quality reminiscent of morning mist. Photorealistic 8K rendering with artistic brushstrokes, rich earthy browns, and warm golden tones — evoking peace, quiet elegance, and timeless tranquility.",
+      "prompt_words": 128,
+      "style_text": "The user's aesthetic preferences lean toward: golden hour backlight, lens flare, dreamy romantic haze; with influences of warm golden amber tones, sunset hues, rich earthy browns; and elements of soft diffused natural window light, gentle morning glow, airy atmosphere. Overall vibe: hand-drawn illustration, watercolor textures, artistic brushstrokes, photorealistic 8K rendering, hyper-detailed, lifelike textures.",
+      "num_ref_images": 1,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/japanese_garden_cat/japanese_garden_cat_mode_C.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/japanese_garden_cat/japanese_garden_cat_mode_C.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/65/20260611/51613171/4f889131-145d-4009-9e4b-a3d424995666.png?Expires=1781790723&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=lXr%2BlW2X7Wq4kLgdV0gjOeXjAlw%3D",
+        "prompt_used": "A serene, hand-drawn illustration in watercolor style, capturing a fluffy ginger cat lazily sipping water from a tranquil Japanese garden pond at golden hour — soft amber sunlight filters through cherry blossom branches above, casting warm, diffused glows and gentle lens flares across the scene. The cat’s fur catches the light with subtle brushstroke textures, while the pond reflects the sky’s soft gradient of peach, orange, and lavender hues. Surrounding the pool are mossy stones, delicate bamboo stalks, and a moss-covered wooden bridge in the background, all rendered with hyper-detailed, lifelike textures. The atmosphere is dreamy and romantic, with a hazy, airy quality reminiscent of morning mist. Photorealistic 8K rendering with artistic brushstrokes, rich earthy browns, and warm golden tones — evoking peace, quiet elegance, and timeless tranquility.",
+        "status": "generated"
+      }
+    }
+  },
+  "mushroom_house": {
+    "id": "mushroom_house",
+    "short_prompt": "童话里的蘑菇小屋，被五彩缤纷的花园环绕",
+    "ref_images": [
+      "/home/coder/project/data/mllm/cankao.png"
+    ],
+    "hard_style": "Ghibli-inspired hand-drawn animation aesthetic: soft watercolor textures and delicate ink linework, fresh pastel color palette with gentle warm undertones, diffused natural sunlight with soft atmospheric shadows, pastoral idyllic scenery with serene tranquility, hand-painted matte painting quality with dreamy nostalgic mood, harmonious balanced composition, Miyazaki healing ambiance — calm, warm, and soul-soothing.",
+    "description": "Fairy tale mushroom cottage surrounded by a colorful garden",
+    "mode_A": {
+      "mode": "A (Zero-shot Baseline)",
+      "enriched_prompt": "A whimsical fairy tale mushroom house nestled in the center of a vibrant, colorful garden, surrounded by blooming flowers in radiant hues of pink, purple, yellow, and blue, with soft sunlight filtering through the canopy above, casting dappled shadows; the house has a cozy, enchanted appearance with moss-covered caps, glowing lanterns on its sides, and tiny windows revealing warm, inviting interiors; the scene is rendered in a dreamy, hand-painted style with soft focus and magical realism, evoking a sense of wonder and tranquility; high-resolution, cinematic lighting, rich textures, and delicate details, as if captured from a children’s fantasy book.",
+      "prompt_words": 99,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/mushroom_house/mushroom_house_mode_A.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/mushroom_house/mushroom_house_mode_A.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/37/20260611/51613171/fc05072d-70f8-4739-bada-9940694ef75c.png?Expires=1781790762&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=nR6P5fogesJb8FyIJMpT3Vk%2FokQ%3D",
+        "prompt_used": "A whimsical fairy tale mushroom house nestled in the center of a vibrant, colorful garden, surrounded by blooming flowers in radiant hues of pink, purple, yellow, and blue, with soft sunlight filtering through the canopy above, casting dappled shadows; the house has a cozy, enchanted appearance with moss-covered caps, glowing lanterns on its sides, and tiny windows revealing warm, inviting interiors; the scene is rendered in a dreamy, hand-painted style with soft focus and magical realism, evoking a sense of wonder and tranquility; high-resolution, cinematic lighting, rich textures, and delicate details, as if captured from a children’s fantasy book.",
+        "status": "generated"
+      }
+    },
+    "mode_B": {
+      "mode": "B (Hard Prompting)",
+      "enriched_prompt": "A whimsical fairy-tale mushroom house nestled in the heart of a vibrant, five-color garden, rendered in a Ghibli-inspired hand-drawn animation style: soft watercolor textures layered with delicate ink linework, bathed in diffused natural sunlight that casts gentle, dreamy atmospheric shadows. The pastel color palette pulses with soft pinks, mint greens, golden yellows, and lavender hues, accented by warm, golden undertones that evoke a comforting, nostalgic glow. The scene unfolds as a pastoral idyll — wildflowers bloom in radiant bursts, butterflies flutter lazily, and dew-kissed moss clings to the mushroom cap roof. Every detail is hand-painted with matte painting precision, evoking a soul-soothing, healing ambiance reminiscent of Miyazaki’s magic — tranquil, serene, and deeply nostalgic. Balanced composition draws the eye to the cozy, inviting mushroom dwelling, surrounded by nature’s gentle embrace, as if time itself has paused to cherish this quiet wonderland.",
+      "prompt_words": 141,
+      "hard_style_used": "Ghibli-inspired hand-drawn animation aesthetic: soft watercolor textures and delicate ink linework, fresh pastel color palette with gentle warm undertones, diffused natural sunlight with soft atmospheric shadows, pastoral idyllic scenery with serene tranquility, hand-painted matte painting quality with dreamy nostalgic mood, harmonious balanced composition, Miyazaki healing ambiance — calm, warm, and soul-soothing.",
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/mushroom_house/mushroom_house_mode_B.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/mushroom_house/mushroom_house_mode_B.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/01/20260611/51613171/137ff73e-3ce3-4682-b250-e1d58816546a.png?Expires=1781790806&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=j3%2FZlNfUF6v8MvqfvByYQ%2BEpi2Q%3D",
+        "prompt_used": "A whimsical fairy-tale mushroom house nestled in the heart of a vibrant, five-color garden, rendered in a Ghibli-inspired hand-drawn animation style: soft watercolor textures layered with delicate ink linework, bathed in diffused natural sunlight that casts gentle, dreamy atmospheric shadows. The pastel color palette pulses with soft pinks, mint greens, golden yellows, and lavender hues, accented by warm, golden undertones that evoke a comforting, nostalgic glow. The scene unfolds as a pastoral idyll — wildflowers bloom in radiant bursts, butterflies flutter lazily, and dew-kissed moss clings to the mushroom cap roof. Every detail is hand-painted with matte painting precision, evoking a soul-soothing, healing ambiance reminiscent of Miyazaki’s magic — tranquil, serene, and deeply nostalgic. Balanced composition draws the eye to the cozy, inviting mushroom dwelling, surrounded by nature’s gentle embrace, as if time itself has paused to cherish this quiet wonderland.",
+        "status": "generated"
+      }
+    },
+    "mode_C": {
+      "mode": "C (Ours: Preference Alignment)",
+      "enriched_prompt": "A whimsical fairy-tale mushroom cottage nestled in a vibrant, rainbow-hued garden, bathed in golden hour backlight with soft lens flare and dreamy romantic haze; the cottage features a thatched roof with glowing lanterns, surrounded by oversized, colorful flowers in soft watercolor textures, delicate fairy lights strung between vines; warm amber, sunset-orange, and earthy brown tones dominate the palette, with gentle morning glow filtering through misty air; hand-drawn illustration style with photorealistic 8K rendering, hyper-detailed textures, artistic brushstrokes, airy and magical atmosphere, evoking a sense of wonder and gentle enchantment.",
+      "prompt_words": 89,
+      "style_text": "The user's aesthetic preferences lean toward: golden hour backlight, lens flare, dreamy romantic haze; with influences of warm golden amber tones, sunset hues, rich earthy browns; and elements of soft diffused natural window light, gentle morning glow, airy atmosphere. Overall vibe: hand-drawn illustration, watercolor textures, artistic brushstrokes, photorealistic 8K rendering, hyper-detailed, lifelike textures.",
+      "num_ref_images": 1,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/mushroom_house/mushroom_house_mode_C.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/mushroom_house/mushroom_house_mode_C.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/4d/20260611/51613171/07aabc6f-9e91-4a15-b271-a96458d6701e.png?Expires=1781790850&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=%2Ffg%2B6l1MsmDa4GcwS9hc5IUZUZA%3D",
+        "prompt_used": "A whimsical fairy-tale mushroom cottage nestled in a vibrant, rainbow-hued garden, bathed in golden hour backlight with soft lens flare and dreamy romantic haze; the cottage features a thatched roof with glowing lanterns, surrounded by oversized, colorful flowers in soft watercolor textures, delicate fairy lights strung between vines; warm amber, sunset-orange, and earthy brown tones dominate the palette, with gentle morning glow filtering through misty air; hand-drawn illustration style with photorealistic 8K rendering, hyper-detailed textures, artistic brushstrokes, airy and magical atmosphere, evoking a sense of wonder and gentle enchantment.",
+        "status": "generated"
+      }
+    }
+  },
+  "lake_boat": {
+    "id": "lake_boat",
+    "short_prompt": "湖面上的一叶小舟，远处青山倒映在平静的水中",
+    "ref_images": [
+      "/home/coder/project/data/mllm/cankao.png"
+    ],
+    "hard_style": "Ghibli-inspired hand-drawn animation aesthetic: soft watercolor textures and delicate ink linework, fresh pastel color palette with gentle warm undertones, diffused natural sunlight with soft atmospheric shadows, pastoral idyllic scenery with serene tranquility, hand-painted matte painting quality with dreamy nostalgic mood, harmonious balanced composition, Miyazaki healing ambiance — calm, warm, and soul-soothing.",
+    "description": "A small boat on a lake with distant green mountains reflected in still water",
+    "mode_A": {
+      "mode": "A (Zero-shot Baseline)",
+      "enriched_prompt": "A solitary small boat gently floats on a calm lake, with distant green mountains mirrored perfectly in the still water, creating a serene and tranquil scene. Soft natural light filters through the atmosphere, casting gentle reflections and subtle ripples on the surface. The color palette features soothing blues, greens, and soft grays, evoking peace and quiet. Rendered in a realistic yet painterly style with high detail, the image should feel like a tranquil watercolor or oil painting, capturing the harmony between nature and stillness. The composition centers the boat slightly off-center, with the mountains forming a graceful horizon line. Ultra-high resolution, cinematic lighting, and a dreamlike, meditative mood.",
+      "prompt_words": 108,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/lake_boat/lake_boat_mode_A.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/lake_boat/lake_boat_mode_A.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/dc/20260611/51613171/be14228b-2f3f-47ce-a3a6-e090165e9099.png?Expires=1781790890&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=TFALyVHzom0ZLxXczcJjh1LKP7w%3D",
+        "prompt_used": "A solitary small boat gently floats on a calm lake, with distant green mountains mirrored perfectly in the still water, creating a serene and tranquil scene. Soft natural light filters through the atmosphere, casting gentle reflections and subtle ripples on the surface. The color palette features soothing blues, greens, and soft grays, evoking peace and quiet. Rendered in a realistic yet painterly style with high detail, the image should feel like a tranquil watercolor or oil painting, capturing the harmony between nature and stillness. The composition centers the boat slightly off-center, with the mountains forming a graceful horizon line. Ultra-high resolution, cinematic lighting, and a dreamlike, meditative mood.",
+        "status": "generated"
+      }
+    },
+    "mode_B": {
+      "mode": "B (Hard Prompting)",
+      "enriched_prompt": "A tranquil lakeside scene featuring a single, delicate rowboat gently floating on still, mirror-like water, its reflection shimmering softly beneath diffused golden sunlight. In the distance, lush, rolling green mountains rise serenely, their silhouettes perfectly mirrored in the water’s surface, creating a harmonious, symmetrical balance. The entire composition is rendered in a Ghibli-inspired hand-drawn animation style: soft watercolor textures blend seamlessly with delicate ink linework, evoking a dreamy, nostalgic atmosphere. The color palette is a gentle pastel wash—soft mint greens, peachy ambers, and pale blues—with warm, golden undertones that radiate calmness and comfort. Diffused natural light glows through the atmosphere, casting soft, hazy shadows that enhance depth without harshness. The scene exudes pastoral serenity, inviting quiet contemplation, with a soul-soothing, healing ambiance reminiscent of Miyazaki’s timeless landscapes—hand-painted, matte-finished, and emotionally resonant.",
+      "prompt_words": 131,
+      "hard_style_used": "Ghibli-inspired hand-drawn animation aesthetic: soft watercolor textures and delicate ink linework, fresh pastel color palette with gentle warm undertones, diffused natural sunlight with soft atmospheric shadows, pastoral idyllic scenery with serene tranquility, hand-painted matte painting quality with dreamy nostalgic mood, harmonious balanced composition, Miyazaki healing ambiance — calm, warm, and soul-soothing.",
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/lake_boat/lake_boat_mode_B.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/lake_boat/lake_boat_mode_B.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/29/20260611/51613171/50a4a613-6ada-4981-9a49-9567e01e1f80.png?Expires=1781790932&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=kspC7kOT4bxIbp7f18xAtVa9EBI%3D",
+        "prompt_used": "A tranquil lakeside scene featuring a single, delicate rowboat gently floating on still, mirror-like water, its reflection shimmering softly beneath diffused golden sunlight. In the distance, lush, rolling green mountains rise serenely, their silhouettes perfectly mirrored in the water’s surface, creating a harmonious, symmetrical balance. The entire composition is rendered in a Ghibli-inspired hand-drawn animation style: soft watercolor textures blend seamlessly with delicate ink linework, evoking a dreamy, nostalgic atmosphere. The color palette is a gentle pastel wash—soft mint greens, peachy ambers, and pale blues—with warm, golden undertones that radiate calmness and comfort. Diffused natural light glows through the atmosphere, casting soft, hazy shadows that enhance depth without harshness. The scene exudes pastoral serenity, inviting quiet contemplation, with a soul-soothing, healing ambiance reminiscent of Miyazaki’s timeless landscapes—hand-painted, matte-finished, and emotionally resonant.",
+        "status": "generated"
+      }
+    },
+    "mode_C": {
+      "mode": "C (Ours: Preference Alignment)",
+      "enriched_prompt": "A serene lakeside scene at golden hour, featuring a single wooden rowboat gently floating on still, mirror-like water that perfectly reflects distant rolling green mountains. Soft, warm amber sunlight filters through the sky, casting a dreamy romantic haze with delicate lens flare and diffused backlighting. The water’s surface is calm and glassy, capturing the silhouettes of the hills in perfect symmetry. Rich earthy browns, deep forest greens, and glowing golden hues dominate the palette, enhanced by subtle watercolor brushstrokes and photorealistic 8K detail. The atmosphere is airy and tranquil, evoking a sense of peace and timeless beauty. Rendered in a hand-drawn illustration style with hyper-detailed textures, lifelike reflections, and cinematic depth — as if painted by a master artist in a tranquil, sun-drenched moment.",
+      "prompt_words": 124,
+      "style_text": "The user's aesthetic preferences lean toward: golden hour backlight, lens flare, dreamy romantic haze; with influences of warm golden amber tones, sunset hues, rich earthy browns; and elements of soft diffused natural window light, gentle morning glow, airy atmosphere. Overall vibe: hand-drawn illustration, watercolor textures, artistic brushstrokes, photorealistic 8K rendering, hyper-detailed, lifelike textures.",
+      "num_ref_images": 1,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/lake_boat/lake_boat_mode_C.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/lake_boat/lake_boat_mode_C.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/2a/20260611/51613171/9dded87d-0bef-4577-aa9a-79cd14c53643.png?Expires=1781790977&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=4MHc7pPfhwrM3DChJvP90jonjRo%3D",
+        "prompt_used": "A serene lakeside scene at golden hour, featuring a single wooden rowboat gently floating on still, mirror-like water that perfectly reflects distant rolling green mountains. Soft, warm amber sunlight filters through the sky, casting a dreamy romantic haze with delicate lens flare and diffused backlighting. The water’s surface is calm and glassy, capturing the silhouettes of the hills in perfect symmetry. Rich earthy browns, deep forest greens, and glowing golden hues dominate the palette, enhanced by subtle watercolor brushstrokes and photorealistic 8K detail. The atmosphere is airy and tranquil, evoking a sense of peace and timeless beauty. Rendered in a hand-drawn illustration style with hyper-detailed textures, lifelike reflections, and cinematic depth — as if painted by a master artist in a tranquil, sun-drenched moment.",
+        "status": "generated"
+      }
+    }
+  },
+  "winter_coffee_shop": {
+    "id": "winter_coffee_shop",
+    "short_prompt": "冬日清晨的街角咖啡店，窗外飘着细雪",
+    "ref_images": [
+      "/home/coder/project/data/mllm/cankao.png"
+    ],
+    "hard_style": "Ghibli-inspired hand-drawn animation aesthetic: soft watercolor textures and delicate ink linework, fresh pastel color palette with gentle warm undertones, diffused natural sunlight with soft atmospheric shadows, pastoral idyllic scenery with serene tranquility, hand-painted matte painting quality with dreamy nostalgic mood, harmonious balanced composition, Miyazaki healing ambiance — calm, warm, and soul-soothing.",
+    "description": "Winter morning at a street-corner coffee shop with light snow falling outside",
+    "mode_A": {
+      "mode": "A (Zero-shot Baseline)",
+      "enriched_prompt": "A cozy corner coffee shop on a winter morning, with delicate snowflakes gently falling outside the window, casting soft, diffused light across the scene. Warm interior tones contrast with the cool, muted blues and whites of the snowy exterior. Steam rises from a freshly brewed cup of coffee on the counter, while wooden tables and plush armchairs invite quiet comfort. The window reflects faint city lights and the quiet stillness of a snowy street. Soft natural light filters through the glass, illuminating dust motes in the air. The atmosphere is serene, intimate, and inviting—captured in a cinematic, high-resolution photograph with shallow depth of field, evoking a nostalgic, tranquil mood.",
+      "prompt_words": 109,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/winter_coffee_shop/winter_coffee_shop_mode_A.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/winter_coffee_shop/winter_coffee_shop_mode_A.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/99/20260611/51613171/06a184d9-d52d-4441-9067-a9d0770f8229.png?Expires=1781791016&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=9HF8XFkcHqsJNIpc2%2Fg9yEWg4Vs%3D",
+        "prompt_used": "A cozy corner coffee shop on a winter morning, with delicate snowflakes gently falling outside the window, casting soft, diffused light across the scene. Warm interior tones contrast with the cool, muted blues and whites of the snowy exterior. Steam rises from a freshly brewed cup of coffee on the counter, while wooden tables and plush armchairs invite quiet comfort. The window reflects faint city lights and the quiet stillness of a snowy street. Soft natural light filters through the glass, illuminating dust motes in the air. The atmosphere is serene, intimate, and inviting—captured in a cinematic, high-resolution photograph with shallow depth of field, evoking a nostalgic, tranquil mood.",
+        "status": "generated"
+      }
+    },
+    "mode_B": {
+      "mode": "B (Hard Prompting)",
+      "enriched_prompt": "A serene Ghibli-inspired hand-drawn animation scene of a cozy corner café in a quiet winter morning, with delicate snowflakes gently drifting through the air outside the warm, glass-paneled windows. The interior glows with soft, diffused sunlight filtering through frosted panes, casting gentle, hazy shadows across wooden tables, steaming mugs of coffee, and a stack of books on a shelf. Outside, a quiet street is blanketed in fresh snow, with a lone pedestrian walking slowly past, their breath visible in the crisp air. The color palette is a dreamy blend of pastel pinks, muted blues, and warm amber tones, rendered with soft watercolor textures and subtle ink linework that evokes hand-painted matte painting quality. The composition is harmoniously balanced, with the café’s inviting warmth contrasting the cool, tranquil outside world. The mood is deeply nostalgic and soul-soothing, infused with Miyazaki’s signature healing ambiance — calm, gentle, and utterly peaceful.",
+      "prompt_words": 148,
+      "hard_style_used": "Ghibli-inspired hand-drawn animation aesthetic: soft watercolor textures and delicate ink linework, fresh pastel color palette with gentle warm undertones, diffused natural sunlight with soft atmospheric shadows, pastoral idyllic scenery with serene tranquility, hand-painted matte painting quality with dreamy nostalgic mood, harmonious balanced composition, Miyazaki healing ambiance — calm, warm, and soul-soothing.",
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/winter_coffee_shop/winter_coffee_shop_mode_B.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/winter_coffee_shop/winter_coffee_shop_mode_B.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/ec/20260611/51613171/c0357166-eeef-44f6-b971-b54f6cd116e5.png?Expires=1781791059&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=J62yWb3%2BiBxNq%2FQK1dQBsuFwMR8%3D",
+        "prompt_used": "A serene Ghibli-inspired hand-drawn animation scene of a cozy corner café in a quiet winter morning, with delicate snowflakes gently drifting through the air outside the warm, glass-paneled windows. The interior glows with soft, diffused sunlight filtering through frosted panes, casting gentle, hazy shadows across wooden tables, steaming mugs of coffee, and a stack of books on a shelf. Outside, a quiet street is blanketed in fresh snow, with a lone pedestrian walking slowly past, their breath visible in the crisp air. The color palette is a dreamy blend of pastel pinks, muted blues, and warm amber tones, rendered with soft watercolor textures and subtle ink linework that evokes hand-painted matte painting quality. The composition is harmoniously balanced, with the café’s inviting warmth contrasting the cool, tranquil outside world. The mood is deeply nostalgic and soul-soothing, infused with Miyazaki’s signature healing ambiance — calm, gentle, and utterly peaceful.",
+        "status": "generated"
+      }
+    },
+    "mode_C": {
+      "mode": "C (Ours: Preference Alignment)",
+      "enriched_prompt": "A cozy winter morning corner café with soft, diffused golden sunlight streaming through large windows, casting warm amber and blush-pink glows across the interior; delicate snowflakes gently drift outside, catching the light in a dreamy, romantic haze; inside, steam rises from a steaming cup of coffee on a wooden table, surrounded by warm-toned leather armchairs, a vintage bookshelf, and a softly lit lamp; the scene is rendered in hyper-detailed 8K photorealistic style with watercolor brushstroke textures and lens flare highlights, evoking a golden-hour ambiance with rich earthy browns, soft creams, and muted winter blues; the composition is intimate and inviting, framed by a slightly blurred foreground to emphasize the cozy warmth and quiet magic of a snowy morning in the city — hand-drawn illustration aesthetic with artistic depth, soft focus, and gentle atmospheric perspective.",
+      "prompt_words": 134,
+      "style_text": "The user's aesthetic preferences lean toward: golden hour backlight, lens flare, dreamy romantic haze; with influences of warm golden amber tones, sunset hues, rich earthy browns; and elements of soft diffused natural window light, gentle morning glow, airy atmosphere. Overall vibe: hand-drawn illustration, watercolor textures, artistic brushstrokes, photorealistic 8K rendering, hyper-detailed, lifelike textures.",
+      "num_ref_images": 1,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/winter_coffee_shop/winter_coffee_shop_mode_C.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/winter_coffee_shop/winter_coffee_shop_mode_C.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/ce/20260611/51613171/5d357080-36e0-4de5-9d35-f3bd5ebe381b.png?Expires=1781791106&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=Or6Z3ApQsdbQUSMSpxe1PSzzDp8%3D",
+        "prompt_used": "A cozy winter morning corner café with soft, diffused golden sunlight streaming through large windows, casting warm amber and blush-pink glows across the interior; delicate snowflakes gently drift outside, catching the light in a dreamy, romantic haze; inside, steam rises from a steaming cup of coffee on a wooden table, surrounded by warm-toned leather armchairs, a vintage bookshelf, and a softly lit lamp; the scene is rendered in hyper-detailed 8K photorealistic style with watercolor brushstroke textures and lens flare highlights, evoking a golden-hour ambiance with rich earthy browns, soft creams, and muted winter blues; the composition is intimate and inviting, framed by a slightly blurred foreground to emphasize the cozy warmth and quiet magic of a snowy morning in the city — hand-drawn illustration aesthetic with artistic depth, soft focus, and gentle atmospheric perspective.",
+        "status": "generated"
+      }
+    }
+  },
+  "sunflower_bicycle": {
+    "id": "sunflower_bicycle",
+    "short_prompt": "向日葵花田中间的小路上，停着一辆老式自行车",
+    "ref_images": [
+      "/home/coder/project/data/mllm/cankao.png"
+    ],
+    "hard_style": "Ghibli-inspired hand-drawn animation aesthetic: soft watercolor textures and delicate ink linework, fresh pastel color palette with gentle warm undertones, diffused natural sunlight with soft atmospheric shadows, pastoral idyllic scenery with serene tranquility, hand-painted matte painting quality with dreamy nostalgic mood, harmonious balanced composition, Miyazaki healing ambiance — calm, warm, and soul-soothing.",
+    "description": "An old bicycle parked on a path through a sunflower field",
+    "mode_A": {
+      "mode": "A (Zero-shot Baseline)",
+      "enriched_prompt": "A vintage bicycle parked on a narrow dirt path winding through a vast, sunlit field of golden sunflowers, with tall, swaying stalks framing the scene; warm golden hour lighting casts long shadows, soft bokeh in the background, rustic wooden handlebars and bell visible, slightly dusty with age; composition centered on the bicycle, shallow depth of field emphasizing the foreground, rich earthy tones with vibrant yellow petals, nostalgic and peaceful mood, rendered in photorealistic style with high detail and cinematic lighting.",
+      "prompt_words": 80,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/sunflower_bicycle/sunflower_bicycle_mode_A.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/sunflower_bicycle/sunflower_bicycle_mode_A.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/0b/20260611/51613171/94cd6d10-fed9-4e53-ad24-0dc25e89fc42.png?Expires=1781791143&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=y86UuDf6%2FZChLI8UMu9hvK0qwNo%3D",
+        "prompt_used": "A vintage bicycle parked on a narrow dirt path winding through a vast, sunlit field of golden sunflowers, with tall, swaying stalks framing the scene; warm golden hour lighting casts long shadows, soft bokeh in the background, rustic wooden handlebars and bell visible, slightly dusty with age; composition centered on the bicycle, shallow depth of field emphasizing the foreground, rich earthy tones with vibrant yellow petals, nostalgic and peaceful mood, rendered in photorealistic style with high detail and cinematic lighting.",
+        "status": "generated"
+      }
+    },
+    "mode_B": {
+      "mode": "B (Hard Prompting)",
+      "enriched_prompt": "A tranquil pastoral scene in a vast sunflower field, where a winding dirt path meanders gently through the golden blooms, leading to a vintage, slightly rusted bicycle parked peacefully in the center — its handlebars slightly tilted as if paused in a moment of quiet stillness. The sun, low and warm, filters through the blossoms in soft diffused light, casting gentle, hazy shadows that ripple across the path and petals. The color palette is a dreamy blend of soft pastels — buttery yellows, peachy pinks, sage greens, and warm cream — with subtle golden undertones that evoke nostalgia and calm. Rendered in a hand-drawn Ghibli-inspired style: delicate ink linework overlays watercolor textures, giving the image a painterly, matte-painted quality. Every petal, leaf, and rusted spoke glows with gentle warmth, while the atmosphere feels hushed and healing — a Miyazaki-esque sanctuary of serenity, where time slows and the soul is gently soothed. Balanced composition draws the eye from the bicycle toward the horizon, where the field gently fades into a soft, misty glow. The mood is peaceful, nostalgic, and deeply soothing — like a quiet afternoon in a forgotten countryside village.",
+      "prompt_words": 190,
+      "hard_style_used": "Ghibli-inspired hand-drawn animation aesthetic: soft watercolor textures and delicate ink linework, fresh pastel color palette with gentle warm undertones, diffused natural sunlight with soft atmospheric shadows, pastoral idyllic scenery with serene tranquility, hand-painted matte painting quality with dreamy nostalgic mood, harmonious balanced composition, Miyazaki healing ambiance — calm, warm, and soul-soothing.",
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/sunflower_bicycle/sunflower_bicycle_mode_B.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/sunflower_bicycle/sunflower_bicycle_mode_B.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/66/20260611/51613171/c94dfc19-4338-4d73-b256-80b9c7c42bd4.png?Expires=1781791189&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=lvUrnO%2BTT7sUkYcDJyKXAtsvZEI%3D",
+        "prompt_used": "A tranquil pastoral scene in a vast sunflower field, where a winding dirt path meanders gently through the golden blooms, leading to a vintage, slightly rusted bicycle parked peacefully in the center — its handlebars slightly tilted as if paused in a moment of quiet stillness. The sun, low and warm, filters through the blossoms in soft diffused light, casting gentle, hazy shadows that ripple across the path and petals. The color palette is a dreamy blend of soft pastels — buttery yellows, peachy pinks, sage greens, and warm cream — with subtle golden undertones that evoke nostalgia and calm. Rendered in a hand-drawn Ghibli-inspired style: delicate ink linework overlays watercolor textures, giving the image a painterly, matte-painted quality. Every petal, leaf, and rusted spoke glows with gentle warmth, while the atmosphere feels hushed and healing — a Miyazaki-esque sanctuary of serenity, where time slows and the soul is gently soothed. Balanced composition draws the eye from the bicycle toward the horizon, where the field gently fades into a soft, misty glow. The mood is peaceful, nostalgic, and deeply soothing — like a quiet afternoon in a forgotten countryside village.",
+        "status": "generated"
+      }
+    },
+    "mode_C": {
+      "mode": "C (Ours: Preference Alignment)",
+      "enriched_prompt": "A serene golden hour scene in a vast sunflower field, with a winding dirt path meandering through the rows of tall, radiant sunflowers bathed in warm amber sunlight. Centered on the path, a vintage bicycle with weathered metal frame and leather saddle rests gently, as if paused by a quiet moment — its handlebars slightly tilted, tires dusted with soft earth. Soft lens flare radiates from the setting sun behind the flowers, casting long, golden shadows and a dreamy, romantic haze over the entire scene. The color palette is rich with deep amber, burnt sienna, and golden yellows, accented by soft greens and warm browns — evoking a nostalgic, tranquil atmosphere. Rendered in hyper-detailed photorealistic 8K with hand-drawn illustration textures, watercolor brushstrokes, and airy, diffused natural light — every petal, rusted spoke, and dust particle feels alive. Mood: peaceful, romantic, timeless — like a memory captured in sunlight.",
+      "prompt_words": 148,
+      "style_text": "The user's aesthetic preferences lean toward: golden hour backlight, lens flare, dreamy romantic haze; with influences of warm golden amber tones, sunset hues, rich earthy browns; and elements of soft diffused natural window light, gentle morning glow, airy atmosphere. Overall vibe: hand-drawn illustration, watercolor textures, artistic brushstrokes, photorealistic 8K rendering, hyper-detailed, lifelike textures.",
+      "num_ref_images": 1,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/sunflower_bicycle/sunflower_bicycle_mode_C.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/sunflower_bicycle/sunflower_bicycle_mode_C.png",
+        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/c3/20260611/51613171/1ece6e23-8733-47a5-8966-1b01a8d922b4.png?Expires=1781791232&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=hay%2BTuTi0JB0hq4AlslrIq2PDFI%3D",
+        "prompt_used": "A serene golden hour scene in a vast sunflower field, with a winding dirt path meandering through the rows of tall, radiant sunflowers bathed in warm amber sunlight. Centered on the path, a vintage bicycle with weathered metal frame and leather saddle rests gently, as if paused by a quiet moment — its handlebars slightly tilted, tires dusted with soft earth. Soft lens flare radiates from the setting sun behind the flowers, casting long, golden shadows and a dreamy, romantic haze over the entire scene. The color palette is rich with deep amber, burnt sienna, and golden yellows, accented by soft greens and warm browns — evoking a nostalgic, tranquil atmosphere. Rendered in hyper-detailed photorealistic 8K with hand-drawn illustration textures, watercolor brushstrokes, and airy, diffused natural light — every petal, rusted spoke, and dust particle feels alive. Mood: peaceful, romantic, timeless — like a memory captured in sunlight.",
+        "status": "generated"
+      }
+    }
+  },
   "fat_cat_cooking": {
     "id": "fat_cat_cooking",
     "short_prompt": "一只胖胖的大橘猫在做饭",
@@ -8,44 +620,161 @@
     "hard_style": "Style: warm cozy kitchen atmosphere, soft golden lighting from overhead lamp, rich earthy tones with touches of vibrant orange fur, shallow depth of field focusing on the cat and cooking utensils, photorealistic textures of food and fur, whimsical yet believable scene, cinematic composition with warm color palette.",
     "description": "A fat orange tabby cat cooking in the kitchen",
     "mode_A": {
-      "mode": "A (Zero-shot Baseline)",
-      "enriched_prompt": "A chubby orange tabby cat, with soft fluffy fur and a round, adorable face, is enthusiastically cooking in a cozy, warmly lit kitchen. The cat wears a tiny chef’s hat and apron, standing on a wooden countertop while stirring a pot with a wooden spoon. Steam rises from the pot, and colorful ingredients like carrots, tomatoes, and herbs are scattered around. The scene is bathed in golden afternoon sunlight streaming through a window, with soft shadows and a warm, inviting atmosphere. The style is whimsical and charming, rendered in high-definition 4K with realistic textures, gentle lighting, and a painterly finish that feels like a cozy animated film. The cat looks joyful and focused, embodying the cuteness of a domestic hero in the kitchen.",
-      "prompt_words": 123,
-      "output_path": "experiment_output/fat_cat_cooking/fat_cat_cooking_A.png",
+      "mode": "A (...)",
+      "enriched_prompt": "",
+      "prompt_words": 0,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/fat_cat_cooking/fat_cat_cooking_mode_A.png",
       "generation": {
         "success": true,
-        "image_path": "experiment_output/fat_cat_cooking/fat_cat_cooking_A.png",
-        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/1f/20260606/51613171/df8dc5fd-aa3d-4596-97c6-c5d6e56435d2.png?Expires=1781320670&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=ZhJkYuNuWRuZKmtRsYqWzgPZUE0%3D",
-        "prompt_used": "A chubby orange tabby cat, with soft fluffy fur and a round, adorable face, is enthusiastically cooking in a cozy, warmly lit kitchen. The cat wears a tiny chef’s hat and apron, standing on a wooden countertop while stirring a pot with a wooden spoon. Steam rises from the pot, and colorful ingredients like carrots, tomatoes, and herbs are scattered around. The scene is bathed in golden afternoon sunlight streaming through a window, with soft shadows and a warm, inviting atmosphere. The style is whimsical and charming, rendered in high-definition 4K with realistic textures, gentle lighting, and a painterly finish that feels like a cozy animated film. The cat looks joyful and focused, embodying the cuteness of a domestic hero in the kitchen.",
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/fat_cat_cooking/fat_cat_cooking_mode_A.png",
         "status": "generated"
       }
     },
     "mode_B": {
-      "mode": "B (Hard Prompting)",
-      "enriched_prompt": "A chubby, fluffy orange tabby cat is cozily cooking in a warm, rustic kitchen, its paws gently stirring a pot on the stove with a wooden spoon, surrounded by steaming vegetables and a basket of fresh herbs; golden overhead lighting casts soft, warm glows across the scene, highlighting the cat’s rich, vibrant orange fur and the glossy textures of food and ceramic cookware; shallow depth of field keeps the cat and nearby utensils sharply in focus while softly blurring the background shelves and wooden cabinets; photorealistic details capture the softness of the cat’s fur, the steam rising from the pot, and the subtle reflections on the glassware; whimsical yet believable composition with a cinematic feel, evoking a comforting, homey mood; rich earthy tones of wood, stone, and copper contrast with the cat’s bright orange, creating a visually inviting and emotionally warm atmosphere.",
-      "prompt_words": 142,
-      "hard_style_used": "Style: warm cozy kitchen atmosphere, soft golden lighting from overhead lamp, rich earthy tones with touches of vibrant orange fur, shallow depth of field focusing on the cat and cooking utensils, photorealistic textures of food and fur, whimsical yet believable scene, cinematic composition with warm color palette.",
-      "output_path": "experiment_output/fat_cat_cooking/fat_cat_cooking_B.png",
+      "mode": "B (...)",
+      "enriched_prompt": "",
+      "prompt_words": 0,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/fat_cat_cooking/fat_cat_cooking_mode_B.png",
       "generation": {
         "success": true,
-        "image_path": "experiment_output/fat_cat_cooking/fat_cat_cooking_B.png",
-        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/58/20260606/51613171/755371d2-0ead-437e-9fec-c1e37db62022.png?Expires=1781320741&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=g7XDvb06IuRYrLL771VhMAcXnq4%3D",
-        "prompt_used": "A chubby, fluffy orange tabby cat is cozily cooking in a warm, rustic kitchen, its paws gently stirring a pot on the stove with a wooden spoon, surrounded by steaming vegetables and a basket of fresh herbs; golden overhead lighting casts soft, warm glows across the scene, highlighting the cat’s rich, vibrant orange fur and the glossy textures of food and ceramic cookware; shallow depth of field keeps the cat and nearby utensils sharply in focus while softly blurring the background shelves and wooden cabinets; photorealistic details capture the softness of the cat’s fur, the steam rising from the pot, and the subtle reflections on the glassware; whimsical yet believable composition with a cinematic feel, evoking a comforting, homey mood; rich earthy tones of wood, stone, and copper contrast with the cat’s bright orange, creating a visually inviting and emotionally warm atmosphere.",
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/fat_cat_cooking/fat_cat_cooking_mode_B.png",
         "status": "generated"
       }
     },
     "mode_C": {
-      "mode": "C (Ours: Preference Alignment)",
-      "enriched_prompt": "A chubby orange tabby cat, with soft fluffy fur and round, gentle eyes, is happily cooking in a cozy, warmly lit kitchen — centered in a symmetrical, classical composition. The cat wears a tiny chef’s hat and apron, standing on a wooden counter surrounded by floating magical sparkles and whimsical floating ingredients like glowing carrots and floating eggs. Steam rises gently from a pot, illuminated by candlelight casting soft, moody, low-key dramatic shadows — reminiscent of film noir with a cozy hygge twist. The kitchen is detailed with photorealistic 8K textures: soft blankets draped over chairs, rustic wooden cabinets, and a vintage toaster with a warm amber glow. The color palette is warm and inviting — deep amber, soft cream, muted browns, and golden highlights — with subtle atmospheric haze and floating fairy dust particles. The mood is playful, whimsical, and fantastical, yet grounded in hyper-realistic detail. The cat looks up with a content, slightly mischievous smile, as if it’s the star of a magical culinary show.",
-      "prompt_words": 167,
-      "style_text": "The user's aesthetic preferences lean toward: playful whimsical fantastical, floating elements, magical sparkles; with influences of photorealistic 8K rendering, hyper-detailed, lifelike textures; and elements of moody subdued atmospheric shadows, low-key dramatic lighting, film noir. Overall vibe: symmetrical balanced centered composition, classical layout, cozy warm inviting hygge atmosphere, soft blankets, candlelight.",
-      "num_ref_images": 1,
-      "output_path": "experiment_output/fat_cat_cooking/fat_cat_cooking_C.png",
+      "mode": "C (...)",
+      "enriched_prompt": "",
+      "prompt_words": 0,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/fat_cat_cooking/fat_cat_cooking_mode_C.png",
       "generation": {
         "success": true,
-        "image_path": "experiment_output/fat_cat_cooking/fat_cat_cooking_C.png",
-        "image_url": "https://dashscope-7c2c.oss-accelerate.aliyuncs.com/7d/22/20260606/51613171/3a990074-3060-491e-b1b4-18e7be53e174.png?Expires=1781320810&OSSAccessKeyId=LTAI5tPxpiCM2hjmWrFXrym1&Signature=BS4A2JxDhZi5vNJLag8mpRqVEbY%3D",
-        "prompt_used": "A chubby orange tabby cat, with soft fluffy fur and round, gentle eyes, is happily cooking in a cozy, warmly lit kitchen — centered in a symmetrical, classical composition. The cat wears a tiny chef’s hat and apron, standing on a wooden counter surrounded by floating magical sparkles and whimsical floating ingredients like glowing carrots and floating eggs. Steam rises gently from a pot, illuminated by candlelight casting soft, moody, low-key dramatic shadows — reminiscent of film noir with a cozy hygge twist. The kitchen is detailed with photorealistic 8K textures: soft blankets draped over chairs, rustic wooden cabinets, and a vintage toaster with a warm amber glow. The color palette is warm and inviting — deep amber, soft cream, muted browns, and golden highlights — with subtle atmospheric haze and floating fairy dust particles. The mood is playful, whimsical, and fantastical, yet grounded in hyper-realistic detail. The cat looks up with a content, slightly mischievous smile, as if it’s the star of a magical culinary show.",
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/fat_cat_cooking/fat_cat_cooking_mode_C.png",
+        "status": "generated"
+      }
+    }
+  },
+  "forest_treehouse": {
+    "id": "forest_treehouse",
+    "short_prompt": "森林深处的树屋，清晨阳光透过树叶洒落",
+    "ref_images": [
+      "/home/coder/project/data/mllm/cankao.png"
+    ],
+    "hard_style": "Ghibli-inspired hand-drawn animation aesthetic: soft watercolor textures and delicate ink linework, fresh pastel color palette with gentle warm undertones, diffused natural sunlight with soft atmospheric shadows, pastoral idyllic scenery with serene tranquility, hand-painted matte painting quality with dreamy nostalgic mood, harmonious balanced composition, Miyazaki healing ambiance — calm, warm, and soul-soothing.",
+    "description": "Treehouse deep in the forest with morning sunlight filtering through leaves",
+    "mode_A": {
+      "mode": "A (...)",
+      "enriched_prompt": "",
+      "prompt_words": 0,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/forest_treehouse/forest_treehouse_mode_A.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/forest_treehouse/forest_treehouse_mode_A.png",
+        "status": "generated"
+      }
+    },
+    "mode_B": {
+      "mode": "B (...)",
+      "enriched_prompt": "",
+      "prompt_words": 0,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/forest_treehouse/forest_treehouse_mode_B.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/forest_treehouse/forest_treehouse_mode_B.png",
+        "status": "generated"
+      }
+    },
+    "mode_C": {
+      "mode": "C (...)",
+      "enriched_prompt": "",
+      "prompt_words": 0,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/forest_treehouse/forest_treehouse_mode_C.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/forest_treehouse/forest_treehouse_mode_C.png",
+        "status": "generated"
+      }
+    }
+  },
+  "cat_flower_meadow": {
+    "id": "cat_flower_meadow",
+    "short_prompt": "一只小猫在开满野花的山坡上打盹",
+    "ref_images": [
+      "/home/coder/project/data/mllm/cankao.png"
+    ],
+    "hard_style": "Ghibli-inspired hand-drawn animation aesthetic: soft watercolor textures and delicate ink linework, fresh pastel color palette with gentle warm undertones, diffused natural sunlight with soft atmospheric shadows, pastoral idyllic scenery with serene tranquility, hand-painted matte painting quality with dreamy nostalgic mood, harmonious balanced composition, Miyazaki healing ambiance — calm, warm, and soul-soothing.",
+    "description": "A cat napping on a hillside covered with wildflowers",
+    "mode_A": {
+      "mode": "A (...)",
+      "enriched_prompt": "",
+      "prompt_words": 0,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/cat_flower_meadow/cat_flower_meadow_mode_A.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/cat_flower_meadow/cat_flower_meadow_mode_A.png",
+        "status": "generated"
+      }
+    },
+    "mode_B": {
+      "mode": "B (...)",
+      "enriched_prompt": "",
+      "prompt_words": 0,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/cat_flower_meadow/cat_flower_meadow_mode_B.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/cat_flower_meadow/cat_flower_meadow_mode_B.png",
+        "status": "generated"
+      }
+    },
+    "mode_C": {
+      "mode": "C (...)",
+      "enriched_prompt": "",
+      "prompt_words": 0,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/cat_flower_meadow/cat_flower_meadow_mode_C.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/cat_flower_meadow/cat_flower_meadow_mode_C.png",
+        "status": "generated"
+      }
+    }
+  },
+  "seaside_dusk": {
+    "id": "seaside_dusk",
+    "short_prompt": "海边小镇的黄昏，海鸥在晚霞中飞翔",
+    "ref_images": [
+      "/home/coder/project/data/mllm/cankao.png"
+    ],
+    "hard_style": "Ghibli-inspired hand-drawn animation aesthetic: soft watercolor textures and delicate ink linework, fresh pastel color palette with gentle warm undertones, diffused natural sunlight with soft atmospheric shadows, pastoral idyllic scenery with serene tranquility, hand-painted matte painting quality with dreamy nostalgic mood, harmonious balanced composition, Miyazaki healing ambiance — calm, warm, and soul-soothing.",
+    "description": "Seaside town at dusk with seagulls flying in the sunset glow",
+    "mode_A": {
+      "mode": "A (...)",
+      "enriched_prompt": "",
+      "prompt_words": 0,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/seaside_dusk/seaside_dusk_mode_A.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/seaside_dusk/seaside_dusk_mode_A.png",
+        "status": "generated"
+      }
+    },
+    "mode_B": {
+      "mode": "B (...)",
+      "enriched_prompt": "",
+      "prompt_words": 0,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/seaside_dusk/seaside_dusk_mode_B.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/seaside_dusk/seaside_dusk_mode_B.png",
+        "status": "generated"
+      }
+    },
+    "mode_C": {
+      "mode": "C (...)",
+      "enriched_prompt": "",
+      "prompt_words": 0,
+      "output_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/seaside_dusk/seaside_dusk_mode_C.png",
+      "generation": {
+        "success": true,
+        "image_path": "/home/coder/project/data/mllm/duomotai/duomotai/qwen_vl_finetune/qwenvl/train/preference_align/experiment_output/seaside_dusk/seaside_dusk_mode_C.png",
         "status": "generated"
       }
     }

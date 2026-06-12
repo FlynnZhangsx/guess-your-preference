@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Image Studio</title>
+<style>
+  :root {
+    --bg: #0d0d0d;
+    --surface: #1a1a1a;
+    --surface2: #222;
+    --border: #333;
+    --text: #e5e5e5;
+    --text2: #999;
+    --text3: #666;
+    --accent: #6c5ce7;
+    --accent2: #a78bfa;
+    --danger: #e74c3c;
+    --radius: 12px;
+    --radius-sm: 8px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Header */
+  .header {
+    width: 100%;
+    max-width: 720px;
+    padding: 32px 24px 0;
+    text-align: center;
+  }
+  .header h1 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.3px;
+  }
+  .header p {
+    font-size: 13px;
+    color: var(--text3);
+    margin-top: 4px;
+  }
+
+  /* Main container */
+  .main {
+    width: 100%;
+    max-width: 720px;
+    padding: 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* Input area */
+  .input-area {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+
+  .row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .row + .row { margin-top: 12px; }
+
+  /* File upload zone */
+  .upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .2s, background .2s;
+    min-width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text2);
+  }
+  .upload-zone:hover, .upload-zone.drag {
+    border-color: var(--accent);
+    background: rgba(108,92,231,.05);
+  }
+  .upload-zone img {
+    max-height: 80px;
+    max-width: 100%;
+    border-radius: 4px;
+    display: none;
+  }
+  .upload-zone.has-image .placeholder { display: none; }
+  .upload-zone.has-image img { display: block; }
+
+  /* Text input */
+  .prompt-input {
+    flex: 1;
+    min-width: 200px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    color: var(--text);
+    font-size: 14px;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .prompt-input:focus { border-color: var(--accent); }
+  .prompt-input::placeholder { color: var(--text3); }
+
+  /* Buttons */
+  .btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .2s;
+    white-space: nowrap;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--accent2); }
+  .btn-primary:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+  }
+  .btn-secondary {
+    background: var(--surface2);
+    color: var(--text2);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { background: var(--border); }
+  .btn-sm { padding: 6px 14px; font-size: 12px; }
+
+  /* Settings row */
+  .settings {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .settings select, .settings input {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: var(--text);
+    font-size: 12px;
+    outline: none;
+    min-width: 80px;
+  }
+  .settings select:focus { border-color: var(--accent); }
+
+  /* Result area */
+  .result-area {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    text-align: center;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .result-area img {
+    max-width: 100%;
+    max-height: 60vh;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 8px 40px rgba(0,0,0,.4);
+  }
+  .result-area .placeholder-text {
+    color: var(--text3);
+    font-size: 14px;
+    line-height: 1.8;
+  }
+  .result-meta {
+    margin-top: 16px;
+    font-size: 12px;
+    color: var(--text2);
+    display: flex;
+    gap: 20px;
+  }
+  .result-meta span { display: flex; align-items: center; gap: 4px; }
+
+  /* Prompt display */
+  .prompt-display {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.6;
+    text-align: left;
+    max-height: 150px;
+    overflow-y: auto;
+    word-break: break-word;
+    display: none;
+  }
+  .prompt-display code {
+    font-size: 12px;
+    background: #2a2a2a;
+    padding: 2px 6px;
+    border-radius: 3px;
+    color: var(--accent2);
+  }
+
+  /* Refine bar */
+  .refine-bar {
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+  }
+
+  /* History */
+  .history {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 8px 0;
+  }
+  .history-item {
+    flex-shrink: 0;
+    width: 120px;
+    text-align: center;
+    cursor: pointer;
+    opacity: .6;
+    transition: opacity .2s;
+  }
+  .history-item:hover, .history-item.active { opacity: 1; }
+  .history-item img {
+    width: 100%;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 2px solid transparent;
+  }
+  .history-item.active img { border-color: var(--accent); }
+  .history-item .label {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 4px;
+  }
+
+  /* Loading */
+  .spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+    margin: 0 auto 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-text { color: var(--text3); font-size: 13px; }
+  .error-text { color: var(--danger); font-size: 13px; }
+
+  /* Mobile */
+  @media (max-width: 600px) {
+    .main { padding: 12px; }
+    .row { flex-direction: column; }
+    .prompt-input { width: 100%; }
+    .btn { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>AI Image Studio</h1>
+  <p>Reference Images + Text → AI Generated Image</p>
+</div>
+
+<div class="main">
+  <!-- Input area -->
+  <div class="input-area">
+    <div class="row">
+      <div class="upload-zone" id="uploadZone">
+        <span class="placeholder">📎 Ref Image</span>
+        <img id="previewImg" alt="Preview">
+        <input type="file" id="fileInput" accept="image/*" style="display:none">
+      </div>
+      <input class="prompt-input" id="promptInput" placeholder="Describe the image you want to create..." autofocus>
+      <button class="btn btn-primary" id="genBtn">Generate</button>
+    </div>
+    <div class="settings">
+      <select id="modeSelect">
+        <option value="api">API (DashScope)</option>
+        <option value="local">Local (Diffusers)</option>
+      </select>
+      <select id="sizeSelect">
+        <option value="2048*2048">2048×2048</option>
+        <option value="1664*928">1664×928</option>
+        <option value="1024*1024">1024×1024</option>
+      </select>
+      <button class="btn btn-sm btn-secondary" id="resetBtn">New Session</button>
+      <span style="font-size:11px;color:var(--text3);margin-left:auto">Enter to send</span>
+    </div>
+  </div>
+
+  <!-- Result -->
+  <div class="result-area" id="resultArea">
+    <div class="placeholder-text">
+      Your generated image<br>will appear here
+    </div>
+  </div>
+
+  <!-- Refine bar -->
+  <div class="refine-bar" id="refineBar">
+    <div class="row">
+      <input class="prompt-input" id="refineInput" placeholder="How would you like to change it? e.g. warmer colors, add more details...">
+      <button class="btn btn-primary" id="refineBtn">Refine</button>
+    </div>
+  </div>
+
+  <!-- History thumbnails -->
+  <div class="history" id="historyRow"></div>
+
+  <!-- Prompt display -->
+  <div class="prompt-display" id="promptDisplay"></div>
+</div>
+
+<script>
+// State
+let session = { history: [], currentImageB64: '', currentPrompt: '', currentScores: {} };
+// Auto-detect base path: if page is at /proxy/7860/, use /proxy/7860 as base
+const API = window.location.pathname.replace(/\/+$/, '');
+
+// Elements
+const uploadZone = document.getElementById('uploadZone');
+const fileInput = document.getElementById('fileInput');
+const previewImg = document.getElementById('previewImg');
+const promptInput = document.getElementById('promptInput');
+const genBtn = document.getElementById('genBtn');
+const refineBar = document.getElementById('refineBar');
+const refineInput = document.getElementById('refineInput');
+const refineBtn = document.getElementById('refineBtn');
+const resetBtn = document.getElementById('resetBtn');
+const resultArea = document.getElementById('resultArea');
+const promptDisplay = document.getElementById('promptDisplay');
+const historyRow = document.getElementById('historyRow');
+const modeSelect = document.getElementById('modeSelect');
+const sizeSelect = document.getElementById('sizeSelect');
+
+let uploadedFile = null;
+
+// Upload zone click
+uploadZone.addEventListener('click', () => fileInput.click());
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag'));
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadZone.classList.remove('drag');
+  if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', () => {
+  if (fileInput.files.length) handleFile(fileInput.files[0]);
+});
+
+function handleFile(file) {
+  if (!file.type.startsWith('image/')) return;
+  uploadedFile = file;
+  const reader = new FileReader();
+  reader.onload = () => {
+    previewImg.src = reader.result;
+    uploadZone.classList.add('has-image');
+    // Visual feedback: change border to green briefly
+    uploadZone.style.borderColor = '#27ae60';
+    uploadZone.style.background = 'rgba(39,174,96,.1)';
+    uploadZone.querySelector('.placeholder').textContent = '✅ ' + file.name;
+    setTimeout(() => {
+      uploadZone.style.borderColor = '';
+      uploadZone.style.background = '';
+      uploadZone.querySelector('.placeholder').textContent = '📎 ' + file.name;
+    }, 1500);
+  };
+  reader.readAsDataURL(file);
+}
+
+// Show loading state
+function setLoading(msg) {
+  resultArea.innerHTML = '<div class="spinner"></div><div class="loading-text">' + (msg || 'Generating, please wait...') + '</div>';
+  genBtn.disabled = true;
+  refineBtn.disabled = true;
+}
+
+// Build full URL: if image_url is absolute (starts with /), prefix with API base path
+function imgUrl(path) {
+  return path && path.startsWith('/') ? API + path : path;
+}
+
+// Show result
+function showResult(data) {
+  const url = imgUrl(data.image_url);
+  session.currentImageUrl = url;
+  session.currentPrompt = data.prompt;
+  session.currentScores = { clip: data.clip_score, aesthetic: data.aesthetic_score };
+  session.history.push({...data, _imgUrl: url});
+
+  resultArea.innerHTML = `<img src="${url}" alt="Generated Image">`;
+  resultArea.innerHTML += `
+    <div class="result-meta">
+      <span>CLIP ${data.clip_score.toFixed(4)}</span>
+      <span>Aesthetic ${data.aesthetic_score.toFixed(4)}</span>
+      <span>Turn ${data.turn}</span>
+    </div>`;
+
+  // Show enriched prompt
+  promptDisplay.style.display = 'block';
+  promptDisplay.innerHTML = `<code>Prompt</code> ${escapeHtml(data.prompt)}`;
+
+  // Show refine bar
+  refineBar.style.display = 'block';
+  refineInput.value = '';
+  refineInput.focus();
+
+  // Update history thumbnails
+  updateHistory();
+
+  genBtn.disabled = false;
+  refineBtn.disabled = false;
+}
+
+function showError(err) {
+  resultArea.innerHTML = `<div class="error-text">${escapeHtml(err)}</div>`;
+  genBtn.disabled = false;
+  refineBtn.disabled = false;
+}
+
+function updateHistory() {
+  historyRow.innerHTML = session.history.map((h, i) => `
+    <div class="history-item ${i === session.history.length - 1 ? 'active' : ''}" onclick="showHistoryItem(${i})">
+      <img src="${h._imgUrl || imgUrl(h.image_url)}" alt="Turn ${h.turn}">
+      <div class="label">Turn ${h.turn} · CLIP ${h.clip_score.toFixed(3)}</div>
+    </div>
+  `).join('');
+}
+
+function showHistoryItem(i) {
+  const h = session.history[i];
+  const url = h._imgUrl || imgUrl(h.image_url);
+  session.currentImageUrl = url;
+  session.currentPrompt = h.prompt;
+  session.currentScores = { clip: h.clip_score, aesthetic: h.aesthetic_score };
+
+  resultArea.innerHTML = `<img src="${url}" alt="Turn ${h.turn}">`;
+  resultArea.innerHTML += `
+    <div class="result-meta">
+      <span>CLIP ${h.clip_score.toFixed(4)}</span>
+      <span>Aesthetic ${h.aesthetic_score.toFixed(4)}</span>
+      <span>Turn ${h.turn}</span>
+    </div>`;
+  promptDisplay.innerHTML = `<code>${h.turn === 1 ? 'Prompt' : 'Refined'}</code> ${escapeHtml(h.prompt)}`;
+
+  // Update active state
+  historyRow.querySelectorAll('.history-item').forEach((el, j) => el.classList.toggle('active', j === i));
+}
+
+function escapeHtml(s) {
+  const div = document.createElement('div');
+  div.textContent = s;
+  return div.innerHTML;
+}
+
+// API calls
+async function generate() {
+  const prompt = promptInput.value.trim();
+  if (!prompt) return;
+
+  setLoading('Loading models & generating... (may take 30-60s)');
+  const form = new FormData();
+  form.append('prompt', prompt);
+  form.append('mode', modeSelect.value);
+  form.append('size', sizeSelect.value);
+  form.append('negative_prompt', 'low quality, blurry, distorted, bad anatomy');
+  form.append('max_tokens', '300');
+  if (uploadedFile) form.append('ref_images', uploadedFile);
+
+  try {
+    const url = API + '/api/generate';
+    const res = await fetch(url, { method: 'POST', body: form });
+    if (!res.ok) {
+      const text = await res.text();
+      let msg = text;
+      try { msg = JSON.parse(text).detail || text; } catch(e) {}
+      throw new Error('HTTP ' + res.status + ': ' + (msg || res.statusText));
+    }
+    showResult(await res.json());
+  } catch (err) {
+    showError((err.message || 'Connection failed') + '<br><small>URL: ' + API + '/api/generate</small>');
+  }
+}
+
+async function refine() {
+  const feedback = refineInput.value.trim();
+  if (!feedback) return;
+
+  setLoading('Refining image... (may take 30-60s)');
+  const form = new FormData();
+  form.append('feedback', feedback);
+  form.append('mode', modeSelect.value);
+  form.append('size', sizeSelect.value);
+  form.append('negative_prompt', 'low quality, blurry, distorted, bad anatomy');
+  form.append('max_tokens', '300');
+
+  try {
+    const url = API + '/api/refine';
+    const res = await fetch(url, { method: 'POST', body: form });
+    if (!res.ok) {
+      const text = await res.text();
+      let msg = text;
+      try { msg = JSON.parse(text).detail || text; } catch(e) {}
+      throw new Error('HTTP ' + res.status + ': ' + (msg || res.statusText));
+    }
+    showResult(await res.json());
+  } catch (err) {
+    showError((err.message || 'Connection failed') + '<br><small>URL: ' + API + '/api/refine</small>');
+  }
+}
+
+async function reset() {
+  session = { history: [], currentImageB64: '', currentPrompt: '', currentScores: {} };
+  uploadedFile = null;
+  previewImg.src = '';
+  uploadZone.classList.remove('has-image');
+  uploadZone.querySelector('.placeholder').textContent = '📎 Ref Image';
+  promptInput.value = '';
+  refineInput.value = '';
+  resultArea.innerHTML = '<div class="placeholder-text">Your generated image<br>will appear here</div>';
+  promptDisplay.style.display = 'none';
+  refineBar.style.display = 'none';
+  historyRow.innerHTML = '';
+  try { await fetch(API + '/api/reset', { method: 'POST' }); } catch (e) {}
+}
+
+// Event listeners
+genBtn.addEventListener('click', generate);
+refineBtn.addEventListener('click', refine);
+resetBtn.addEventListener('click', reset);
+promptInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); generate(); }});
+refineInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); refine(); }});
+</script>
+
+</body>
+</html>
