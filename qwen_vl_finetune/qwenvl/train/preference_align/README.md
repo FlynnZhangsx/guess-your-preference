@@ -152,15 +152,6 @@ python extract_features.py         # Step 1: Extract CLIP features
 python train.py                    # Step 2: Train Image_MLP (~5 min on CPU)
 ```
 
-## Evaluation Results (16 test cases)
-
-| Mode | Strategy | Text↔Image CLIP ↑ | Image↔Image CLIP ↑ |
-|------|----------|:---:|:---:|
-| A | Zero-shot baseline | 0.2275 | 0.6520 |
-| B | Hard prompting (handwritten) | 0.2339 | 0.7458 |
-| **C** | **Ours — Preference Alignment** | **0.2267** | **0.7257** |
-
-Mode C is fully automated — users only need to upload reference images, no manual text engineering required.
 
 ## Models
 
